@@ -93,7 +93,7 @@ function _9(html)
 }
 
 
-async function _10(galaxyBg,fontUrl,mapIconSvg,analysisIconSvg)
+async function _landingScreen(galaxyBg,fontUrl,mapIconSvg,analysisIconSvg)
 {
   const bg = await galaxyBg;
   const font = await fontUrl;
@@ -151,18 +151,13 @@ pageTitle.textContent = "Genshin Impact Archive";
 div.appendChild(pageTitle);
 
   div.querySelector('#go-map').addEventListener('click', () => {
-  const target = document.getElementById('map-section');
-  if (target) target.scrollIntoView({behavior: 'smooth'});
+  window.showScreen('map');
 });
-
 div.querySelector('#go-analysis').addEventListener('click', () => {
-  const target = document.getElementById('analysis-section');
-  if (target) target.scrollIntoView({behavior: 'smooth'});
+  window.showScreen('analysis');
 });
-
-  div.querySelector('#go-disclaimer').addEventListener('click', () => {
-  const target = document.getElementById('disclaimer-section');
-  if (target) target.scrollIntoView({behavior:'smooth'});
+div.querySelector('#go-disclaimer').addEventListener('click', () => {
+  window.showScreen('disclaimer');
 });
 
   return div;
@@ -230,7 +225,7 @@ function _regions(){return(
 ]
 )}
 
-async function _12(d3,mapImage,regions,labelsImage,characters,icons,splashArts)
+async function _mapSection(d3,mapImage,regions,labelsImage,characters,icons,mapBackBtnackBtn,splashArts)
 {
   const mapW = 9309, mapH = 7370;
 
@@ -355,9 +350,8 @@ mapBackBtn.style.cssText = `position:absolute;top:16px;right:16px;cursor:pointer
 mapBackBtn.innerHTML = `<svg width="48" height="48" viewBox="0 0 77 77" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="38.0107" cy="38.0107" r="31.0107" fill="#EBE7D8"/><circle cx="38.0107" cy="38.0107" r="34.5107" stroke="#EBE7D8" stroke-opacity="0.5" stroke-width="7"/><path d="M37.1631 28.0425C44.8237 27.1751 58.0352 31.0762 58.0352 42.3267C58.0351 57.1389 41.9149 60.2895 33.8545 60.0132C39.8421 59.5526 51.8169 56.6969 51.8174 48.9595C51.8174 41.7854 42.7114 40.4718 37.1631 40.7222V50.1372C35.0976 45.255 23.1413 37.0092 17.9863 34.8784C23.1413 32.7476 35.0977 24.5018 37.1631 19.6196V28.0425Z" fill="#3C4255"/></svg>`;
 mapBackBtn.addEventListener("mouseenter", () => mapBackBtn.style.transform = "scale(1.08)");
 mapBackBtn.addEventListener("mouseleave", () => mapBackBtn.style.transform = "scale(1)");
-mapBackBtn.addEventListener("click", () => {
-  const ls = document.getElementById("landing-screen");
-  if (ls) ls.scrollIntoView({ behavior: "smooth" });
+mapBackBtnackBtn.addEventListener("click", () => {
+  window.showScreen('landing');
 });
 wrapper.appendChild(mapBackBtn);
 
@@ -551,7 +545,7 @@ cardEl.appendChild(pullSection);
 }
 
 
-async function _13(FileAttachment,characters,galaxyBg)
+async function _analysisSection(FileAttachment,characters,galaxyBg)
 {
   const TAB_ICONS = [
     (await FileAttachment("tab1_icon.svg").text()).replace('<svg ', '<svg width="40" height="40" '),
@@ -636,7 +630,9 @@ async function _13(FileAttachment,characters,galaxyBg)
   backBtn.innerHTML = BACK_SVG;
   backBtn.addEventListener("mouseenter", () => backBtn.style.transform='scale(1.08)');
   backBtn.addEventListener("mouseleave", () => backBtn.style.transform='scale(1)');
-  backBtn.addEventListener("click", () => { const ls=document.getElementById('landing-screen'); if(ls) ls.scrollIntoView({behavior:'smooth'}); });
+  backBtn.addEventListener("click", () => {
+  window.showScreen('landing');
+});
   topBar.appendChild(titleWrap); topBar.appendChild(tabsWrap); topBar.appendChild(backBtn);
 
   // MAIN BODY
@@ -1082,7 +1078,7 @@ t.setAttribute("transform",`rotate(-40, ${x+bW2/2}, ${biH+16})`);
 }
 
 
-async function _14(FileAttachment,galaxyBg)
+async function _disclaimerSection(FileAttachment,galaxyBg)
 {
   const DISCLAIMER_ICON = `<svg width="50" height="56" viewBox="0 0 50 56" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24.7501 30.399C26.3081 30.3991 27.5709 31.6618 27.5709 33.2197C27.5709 34.7777 26.3081 36.0404 24.7501 36.0405C23.1921 36.0405 21.9286 34.7777 21.9286 33.2197C21.9286 31.6617 23.1921 30.399 24.7501 30.399Z" fill="#D3BC8F"/><path d="M21.0989 9.79073C23.0482 7.6185 26.4512 7.61859 28.4006 9.79073C29.5081 11.0249 29.9173 12.7348 29.4882 14.3365L26.3365 26.0989C25.9015 27.7223 23.5979 27.7223 23.163 26.0989L20.0113 14.3365C19.5822 12.7349 19.9915 11.0249 21.0989 9.79073Z" fill="#D3BC8F"/><path fill-rule="evenodd" clip-rule="evenodd" d="M41.8953 1.66423C43.2115 1.73119 44.2586 2.81961 44.2586 4.15246V4.4931H45.3681L45.4914 4.49553C46.7577 4.54696 47.7647 5.38184 47.7647 6.40388V9.91969L47.7615 10.0178C47.6994 10.9946 46.7168 11.7774 45.4914 11.8272L45.3681 11.8297H44.2586V51.4022L44.2529 51.5725C44.1385 53.3158 42.2795 54.4224 40.6763 53.6422L25.841 46.42C25.1528 46.0851 24.3483 46.0852 23.6601 46.42L8.8248 53.6422L8.66827 53.712C7.10285 54.3505 5.3589 53.2596 5.24816 51.5725L5.24249 51.4022V11.8297H4.133L4.00972 11.8272C2.74329 11.776 1.7358 10.9418 1.7356 9.91969V6.40388C1.7356 5.34872 2.80914 4.49314 4.133 4.4931H5.24249V4.15246C5.24249 2.81944 6.28937 1.73093 7.60582 1.66423L7.73397 1.66099H41.7671L41.8953 1.66423ZM7.73397 3.32197C7.2753 3.32197 6.90347 3.69379 6.90347 4.15246V51.4022C6.9035 52.0156 7.54573 52.4174 8.09731 52.1491L10.0446 51.201V3.32197H7.73397ZM39.4557 51.2002L41.4038 52.1491C41.9553 52.417 42.5976 52.0154 42.5976 51.4022V4.15246C42.5976 3.69397 42.2256 3.32225 41.7671 3.32197H39.4557V51.2002ZM10.8751 50.7963L22.9326 44.9269C24.0798 44.3686 25.4205 44.3686 26.5677 44.9269L38.6252 50.7963V3.32197H10.8751V50.7963ZM4.133 5.76641C3.69175 5.76646 3.33414 6.05218 3.33414 6.40388V9.91969C3.33434 10.2713 3.69187 10.5563 4.133 10.5563H5.24249V5.76641H4.133ZM44.2586 10.5563H45.3681C45.809 10.556 46.1668 10.2711 46.167 9.91969V6.40388C46.167 6.05234 45.8091 5.76672 45.3681 5.76641H44.2586V10.5563Z" fill="#D3BC8F"/><path fill-rule="evenodd" clip-rule="evenodd" d="M41.7671 0C43.492 0.000255323 44.9693 1.05159 45.5968 2.54744H46.2002L46.3284 2.55068L46.3389 2.5515H46.3495C48.1048 2.64086 49.5011 4.09183 49.5011 5.86941V10.4752L49.4979 10.6034L49.4971 10.6139V10.6245C49.4109 12.324 48.0485 13.6856 46.3495 13.7721H46.3389L46.3284 13.7729L46.2002 13.7761H45.9196V51.4022C45.9192 54.4692 42.7076 56.4782 39.9496 55.1361L25.1143 47.9139C24.8851 47.8023 24.6164 47.8023 24.3868 47.9139L9.55148 55.1361C6.79337 56.4785 3.58187 54.4692 3.5815 51.4022V13.7761H3.30088L3.17274 13.7729L3.1622 13.7721H3.15166C1.39577 13.683 0.000212312 12.2314 0 10.4542V5.86941C0 4.03474 1.4873 2.54744 3.32197 2.54744H3.90429C4.53178 1.05151 6.00878 0 7.73397 0H41.7671ZM7.73397 0.830493C6.16605 0.830493 4.85267 1.91687 4.50364 3.37793H3.32197C1.94597 3.37793 0.830493 4.49341 0.830493 5.86941V10.4542C0.830652 11.787 1.87748 12.8757 3.19383 12.9424L3.32197 12.9456H4.41199V51.4022C4.41229 53.856 6.98173 55.4632 9.18814 54.3892L24.0235 47.167C24.4823 46.9438 25.0189 46.9436 25.4776 47.167L40.313 54.3892C42.5193 55.4629 45.0888 53.8559 45.0891 51.4022V12.9456H46.1791L46.3073 12.9424C47.581 12.8775 48.6028 11.8561 48.6674 10.5823L48.6706 10.4542V5.86941C48.6706 4.5366 47.6234 3.44819 46.3073 3.38118L46.1791 3.37793H44.9975C44.6484 1.91699 43.3349 0.830734 41.7671 0.830493H7.73397Z" fill="#D3BC8F"/></svg>`;
 
@@ -1122,9 +1118,8 @@ topBar.style.cssText = `display:flex;align-items:center;justify-content:space-be
   backBtn.addEventListener("mouseenter", () => backBtn.style.transform = "scale(1.08)");
   backBtn.addEventListener("mouseleave", () => backBtn.style.transform = "scale(1)");
   backBtn.addEventListener("click", () => {
-    const ls = document.getElementById("landing-screen");
-    if (ls) ls.scrollIntoView({ behavior: "smooth" });
-  });
+  window.showScreen('landing');
+});
   topBar.appendChild(titleWrap);
   topBar.appendChild(backBtn);
   content.appendChild(topBar);
@@ -1839,11 +1834,11 @@ export default function define(runtime, observer) {
   main.variable(observer("mapIconSvg")).define("mapIconSvg", _mapIconSvg);
   main.variable(observer("analysisIconSvg")).define("analysisIconSvg", _analysisIconSvg);
   main.variable(observer()).define(["html"], _9);
-  main.variable(observer()).define(["galaxyBg","fontUrl","mapIconSvg","analysisIconSvg"], _10);
+  main.variable(observer("landingScreen")).define("landingScreen", ["galaxyBg","fontUrl","mapIconSvg","analysisIconSvg"], _landingScreen);
   main.variable(observer("regions")).define("regions", _regions);
-  main.variable(observer()).define(["d3","mapImage","regions","labelsImage","characters","icons","splashArts"], _12);
-  main.variable(observer()).define(["FileAttachment","characters","galaxyBg"], _13);
-  main.variable(observer()).define(["FileAttachment","galaxyBg"], _14);
+  main.variable(observer("mapSection")).define("mapSection", ["d3","mapImage","regions","labelsImage","characters","icons","mapBackBtnackBtn","splashArts"], _mapSection);
+  main.variable(observer("analysisSection")).define("analysisSection", ["FileAttachment","characters","galaxyBg"], _analysisSection);
+  main.variable(observer("disclaimerSection")).define("disclaimerSection", ["FileAttachment","galaxyBg"], _disclaimerSection);
   main.variable(observer("characters")).define("characters", ["FileAttachment"], _characters);
   main.variable(observer("icons")).define("icons", ["FileAttachment"], _icons);
   main.variable(observer("splashArts")).define("splashArts", ["FileAttachment"], _splashArts);

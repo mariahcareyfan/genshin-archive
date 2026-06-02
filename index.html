@@ -1,14 +1,105 @@
 <!DOCTYPE html>
+<html lang="en">
 <meta charset="utf-8">
-<title>Teyvat Character Map</title>
+<title>Genshin Impact Archive</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="./inspector.css">
-<body>
-<script type="module">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+  }
+
+  /* hide ALL observable cell output by default */
+  body > div {
+    display: none !important;
+  }
+
+  .observablehq {
+    display: none !important;
+  }
+
+  #app {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .screen {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: none;
+  }
+
+  .screen.active {
+    display: block;
+  }
+
+  .screen > div {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100vh !important;
+  }
+</style>
+<body>
+<div id="app">
+  <div class="screen active" id="screen-landing"></div>
+  <div class="screen" id="screen-map"></div>
+  <div class="screen" id="screen-analysis"></div>
+  <div class="screen" id="screen-disclaimer"></div>
+</div>
+
+<script type="module">
 import define from "./index.js";
 import {Runtime, Library, Inspector} from "./runtime.js";
 
 const runtime = new Runtime();
-const main = runtime.module(define, Inspector.into(document.body));
+
+const main = runtime.module(define, name => {
+  if (name === "landingScreen") {
+    return {
+      fulfilled(value) {
+        document.getElementById("screen-landing").appendChild(value);
+      }
+    };
+  }
+  if (name === "mapSection") {
+    return {
+      fulfilled(value) {
+        document.getElementById("screen-map").appendChild(value);
+      }
+    };
+  }
+  if (name === "analysisSection") {
+    return {
+      fulfilled(value) {
+        document.getElementById("screen-analysis").appendChild(value);
+      }
+    };
+  }
+  if (name === "disclaimerSection") {
+    return {
+      fulfilled(value) {
+        document.getElementById("screen-disclaimer").appendChild(value);
+      }
+    };
+  }
+  return true;
+});
+
+window.showScreen = function(name) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById("screen-" + name).classList.add("active");
+};
 
 </script>
+</body>
+</html>
