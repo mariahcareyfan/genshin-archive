@@ -289,7 +289,7 @@ async function _mapSection(d3,mapImage,regions,labelsImage,characters,icons,spla
 });
 
 const zoom = d3.zoom()
-.scaleExtent([Math.min(window.innerWidth / mapW, window.innerHeight / mapH), 8])
+.scaleExtent([1, 8])
 .on("zoom", e => g.attr("transform", e.transform));
 
   svg.call(zoom);
@@ -338,8 +338,7 @@ const zoom = d3.zoom()
       g.selectAll(".char-icon").transition().duration(750).attr("opacity", 0);
       labels.transition().duration(750).attr("opacity", 1);
       Object.values(regionPaths).forEach(p => p.transition().duration(750).attr("opacity", 1));
-      const _rs=Math.min(wrapper.clientWidth/mapW,wrapper.clientHeight/mapH);
-      svg.transition().duration(750).call(zoom.transform,d3.zoomIdentity.translate((wrapper.clientWidth-mapW*_rs)/2,(wrapper.clientHeight-mapH*_rs)/2).scale(_rs));
+      svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
     }
   });
 
@@ -348,11 +347,6 @@ const zoom = d3.zoom()
 wrapper.id = "map-section";
 wrapper.style.cssText = "position:relative; overflow:hidden; width:100vw; height:100vh;";
   wrapper.appendChild(svg.node());
-
-  requestAnimationFrame(() => {
-    const _is=Math.min(wrapper.clientWidth/mapW,wrapper.clientHeight/mapH);
-    svg.call(zoom.transform,d3.zoomIdentity.translate((wrapper.clientWidth-mapW*_is)/2,(wrapper.clientHeight-mapH*_is)/2).scale(_is));
-  });
 
   const mapBackBtn = document.createElement("div");
 mapBackBtn.style.cssText = `position:absolute;top:16px;right:16px;cursor:pointer;transition:transform 0.2s;z-index:10;`;
@@ -581,8 +575,8 @@ async function _analysisSection(FileAttachment,characters,galaxyBg)
   const inputStyle = `background:rgba(255,255,214,0.08);border:1px solid rgba(255,255,214,0.3);color:#FFFFD6;padding:8px 12px;border-radius:16px;font-family:'GenshinFont',sans-serif;font-size:12px;outline:none;width:100%;box-sizing:border-box;`;
   const selectStyle = `background:rgba(255,255,214,0.08);border:1px solid rgba(255,255,214,0.3);color:#FFFFD6;padding:8px 12px;border-radius:16px;font-family:'GenshinFont',sans-serif;font-size:12px;cursor:pointer;outline:none;width:100%;box-sizing:border-box;`;
   const labelStyle = `font-size:10px;color:rgba(255,255,214,0.8);letter-spacing:0px;text-transform:uppercase;margin-bottom:4px;`;
-  const axisTextStyle = `fill:rgba(255,255,214,1);font-size:11px;font-family:'GenshinFont',sans-serif;`;
-  const axisLabelStyle = `fill:#FFFFD6;font-size:12px;font-family:'GenshinFont',sans-serif;`;
+  const axisTextStyle = `fill:rgba(255,255,214,1);font-size:16px;font-family:'GenshinFont',sans-serif;`;
+  const axisLabelStyle = `fill:#FFFFD6;font-size:24px;font-family:'GenshinFont',sans-serif;`;
 
   // DATA
   const charMap = {};
@@ -896,7 +890,7 @@ const BASE_W=w, H=Math.floor(h*0.85), M={top:16,right:16,bottom:46,left:52}, iH=
         path.setAttribute("d",pts.map((p,i)=>`${i===0?'M':'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' '));
         path.setAttribute("fill","none");
         const baseColor=isPinned?(rarity===5?COLOR_5STAR:COLOR_4STAR):"rgba(255,255,214,0.15)";
-        path.setAttribute("stroke",baseColor); path.setAttribute("stroke-width",isPinned?"2":"0.8"); path.style.cursor="pointer";
+        path.setAttribute("stroke",baseColor); path.setAttribute("stroke-width",isPinned?"3":"1.5"); path.style.cursor="pointer"; path.setAttribute("stroke-linecap","round");
         const canHover=!hasPinned||isPinned;
         if(canHover){
           path.addEventListener("mouseenter",()=>{ if(!isPinned){path.setAttribute("stroke","#FFFFD6"); path.setAttribute("stroke-width","2");} tooltip.style.opacity="1"; });
@@ -908,20 +902,10 @@ const BASE_W=w, H=Math.floor(h*0.85), M={top:16,right:16,bottom:46,left:52}, iH=
             tooltip.innerHTML=`<b>${name}</b><br>Use rate: ${rate!==undefined?rate+"%":"N/A"}<br>${versionLabels[vi]}<br><span style="color:rgba(255,255,214,0.6);">${pull} pulled as of ${latestVersionLabel}</span>`;
             positionTooltip(tooltip,e,scrollWrap);
           });
-          path.addEventListener("mouseleave",()=>{ if(!isPinned){path.setAttribute("stroke",baseColor); path.setAttribute("stroke-width","0.8");} tooltip.style.opacity="0"; hvLine.style.display="none"; });
+          path.addEventListener("mouseleave",()=>{ if(!isPinned){path.setAttribute("stroke",baseColor); path.setAttribute("stroke-width","1.5");} tooltip.style.opacity="0"; hvLine.style.display="none"; });
         }
         path.addEventListener("click",()=>{ if(pinnedChars.has(name)) pinnedChars.delete(name); else pinnedChars.add(name); renderLines(); pinnedPanel2.update(pinnedChars); });
-        const hitbox=document.createElementNS("http://www.w3.org/2000/svg","path");
-        hitbox.setAttribute("d",pathD);hitbox.setAttribute("fill","none");
-        hitbox.setAttribute("stroke","transparent");hitbox.setAttribute("stroke-width","12");
-        hitbox.style.cursor="pointer";
-        if(canHover){
-          hitbox.addEventListener("mouseenter",e=>path.dispatchEvent(new MouseEvent("mouseenter",e)));
-          hitbox.addEventListener("mousemove",e=>path.dispatchEvent(new MouseEvent("mousemove",e)));
-          hitbox.addEventListener("mouseleave",e=>path.dispatchEvent(new MouseEvent("mouseleave",e)));
-        }
-        hitbox.addEventListener("click",e=>path.dispatchEvent(new MouseEvent("click",e)));
-        g.appendChild(path);g.appendChild(hitbox);
+        g.appendChild(path);
       });
       pinnedPanel2.update(pinnedChars);
       const note=document.createElement("div"); note.className="tab2note"; note.style.cssText=`flex-shrink:0;font-size:10px;color:rgba(255,255,214,0.5);`; note.textContent="Click a line to pin · hover disabled for others when pinned"; rightPanel.appendChild(note);
@@ -1078,7 +1062,7 @@ const BW=w, BH=Math.floor(h*0.25), BM={top:8,right:12,bottom:80,left:100};
             lTip.innerHTML=`<b>${cat}</b><br>Avg use rate: ${rate!==undefined?rate.toFixed(1)+"%":"N/A"}<br>${versionLabels[vi]}`;
             positionTooltip(lTip,e,lScroll);
           });
-          path.addEventListener("mouseleave",()=>{ if(!isPinned){path.setAttribute("stroke",baseColor); path.setAttribute("stroke-width","0.8");} lTip.style.opacity="0"; hvL.style.display="none"; });
+          path.addEventListener("mouseleave",()=>{ if(!isPinned){path.setAttribute("stroke",baseColor); path.setAttribute("stroke-width","1.5");} lTip.style.opacity="0"; hvL.style.display="none"; });
         }
         path.addEventListener("click",()=>{ if(pinnedCats.has(cat)) pinnedCats.delete(cat); else pinnedCats.add(cat); renderLineChart(); });
         lg.appendChild(path);
