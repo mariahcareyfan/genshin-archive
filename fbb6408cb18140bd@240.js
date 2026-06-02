@@ -288,7 +288,7 @@ async function _mapSection(d3,mapImage,regions,labelsImage,characters,icons,spla
 });
 
   const zoom = d3.zoom()
-    .scaleExtent([1, 8])
+    .scaleExtent([0.5, 8])
     .on("zoom", e => g.attr("transform", e.transform));
 
   svg.call(zoom);
@@ -760,7 +760,7 @@ async function _analysisSection(FileAttachment,characters,galaxyBg)
     const charSearch = buildCharSearch(name => { highlighted=highlighted===name?null:name; renderDots(); pinnedPanel.update(highlighted?new Set([highlighted]):new Set()); });
     controlsArea.appendChild(charSearch);
 
-    const W=560, H=400, M={top:16,right:170,bottom:46,left:56};
+    const W=560, H=320, M={top:16,right:170,bottom:46,left:56};
     const iW=W-M.left-M.right, iH=H-M.top-M.bottom;
     const wrap = document.createElement("div"); wrap.style.cssText=`flex:1;position:relative;`; rightPanel.appendChild(wrap);
     const svgEl = document.createElementNS("http://www.w3.org/2000/svg","svg");
@@ -847,7 +847,7 @@ async function _analysisSection(FileAttachment,characters,galaxyBg)
     const cs=buildCharSearch(name=>{ if(pinnedChars.has(name)) pinnedChars.delete(name); else pinnedChars.add(name); renderLines(); }); controlsArea.appendChild(cs);
     const clrBtn=document.createElement("div"); clrBtn.style.cssText=`padding:6px 12px;border-radius:12px;font-size:10px;cursor:pointer;border:1px solid rgba(255,100,100,0.4);color:rgba(255,100,100,0.8);text-align:center;flex-shrink:0;`; clrBtn.textContent="Clear Pinned"; clrBtn.addEventListener("click",()=>{ pinnedChars.clear(); renderLines(); }); controlsArea.appendChild(clrBtn);
 
-    const BASE_W=560, H=500, M={top:16,right:16,bottom:46,left:52}, iH=H-M.top-M.bottom;
+    const BASE_W=800, H=600, M={top:16,right:16,bottom:46,left:52}, iH=H-M.top-M.bottom;
     const {outerWrap,scrollWrap,scrollOuter}=makeZoomableChart(BASE_W);
     rightPanel.appendChild(outerWrap);
     const tooltip=makeTooltip(scrollWrap);
