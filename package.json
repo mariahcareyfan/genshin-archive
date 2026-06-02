@@ -1,0 +1,14 @@
+{
+  "name": "fbb6408cb18140bd",
+  "main": "fbb6408cb18140bd@231.js",
+  "version": "231.0.0",
+  "homepage": "https://observablehq.com/d/fbb6408cb18140bd",
+  "author": {
+    "name": "Juna Kim",
+    "url": "https://observablehq.com/@juna-kim2"
+  },
+  "type": "module",
+  "peerDependencies": {
+    "@observablehq/runtime": "4 - 5"
+  }
+}
