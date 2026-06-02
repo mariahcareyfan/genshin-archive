@@ -289,7 +289,7 @@ async function _mapSection(d3,mapImage,regions,labelsImage,characters,icons,spla
 });
 
 const zoom = d3.zoom()
-.scaleExtent([1, 8])
+.scaleExtent([Math.min(window.innerWidth / mapW, window.innerHeight / mapH), 8])
 .on("zoom", e => g.attr("transform", e.transform));
 
   svg.call(zoom);
@@ -764,7 +764,7 @@ async function _analysisSection(FileAttachment,characters,galaxyBg)
     controlsArea.appendChild(charSearch);
 
     const {w, h} = window._getChartDims ? window._getChartDims() : {w:560, h:400};
-const W=w, H=Math.floor(h*0.85), M={top:16,right:170,bottom:46,left:56};
+const W=w, H=Math.floor(h*0.85), M={top:24,right:190,bottom:80,left:80};
     const iW=W-M.left-M.right, iH=H-M.top-M.bottom;
     const wrap = document.createElement("div"); wrap.style.cssText=`flex:1;position:relative;`; rightPanel.appendChild(wrap);
     const svgEl = document.createElementNS("http://www.w3.org/2000/svg","svg");
@@ -778,8 +778,8 @@ const W=w, H=Math.floor(h*0.85), M={top:16,right:170,bottom:46,left:56};
       const ty=document.createElementNS("http://www.w3.org/2000/svg","text"); ty.setAttribute("x","-6"); ty.setAttribute("y",yScale(v)+4); ty.setAttribute("text-anchor","end"); ty.style.cssText=axisTextStyle; ty.textContent=v+"%"; g.appendChild(ty);
       const tx=document.createElementNS("http://www.w3.org/2000/svg","text"); tx.setAttribute("x",xScale(v)); tx.setAttribute("y",iH+14); tx.setAttribute("text-anchor","middle"); tx.style.cssText=axisTextStyle; tx.textContent=v+"%"; g.appendChild(tx);
     });
-    const yLab=document.createElementNS("http://www.w3.org/2000/svg","text"); yLab.setAttribute("transform",`translate(-40,${iH/2}) rotate(-90)`); yLab.setAttribute("text-anchor","middle"); yLab.style.cssText=axisLabelStyle; yLab.textContent="Abyss Use Rate %"; g.appendChild(yLab);
-    const xLab=document.createElementNS("http://www.w3.org/2000/svg","text"); xLab.setAttribute("x",iW/2); xLab.setAttribute("y",iH+36); xLab.setAttribute("text-anchor","middle"); xLab.style.cssText=axisLabelStyle; xLab.textContent="Ownership Rate %"; g.appendChild(xLab);
+    const yLab=document.createElementNS("http://www.w3.org/2000/svg","text"); yLab.setAttribute("transform",`translate(-65,${iH/2}) rotate(-90)`); yLab.setAttribute("text-anchor","middle"); yLab.style.cssText=axisLabelStyle; yLab.textContent="Abyss Use Rate %"; g.appendChild(yLab);
+    const xLab=document.createElementNS("http://www.w3.org/2000/svg","text"); xLab.setAttribute("x",iW/2); xLab.setAttribute("y",iH+65); xLab.setAttribute("text-anchor","middle"); xLab.style.cssText=axisLabelStyle; xLab.textContent="Ownership Rate %"; g.appendChild(xLab);
     const dotsGroup=document.createElementNS("http://www.w3.org/2000/svg","g"); g.appendChild(dotsGroup);
     const tooltip=makeTooltip(wrap);
 
@@ -804,7 +804,7 @@ const W=w, H=Math.floor(h*0.85), M={top:16,right:170,bottom:46,left:56};
     }
     renderDots();
     const leg=document.createElement("div"); leg.style.cssText=`display:flex;gap:14px;flex-shrink:0;padding-top:2px;`;
-    leg.innerHTML=`<div style="display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(255,255,214,0.8);"><div style="width:8px;height:8px;border-radius:50%;background:${COLOR_5STAR};"></div>5★</div><div style="display:flex;align-items:center;gap:5px;font-size:10px;color:rgba(255,255,214,0.8);"><div style="width:8px;height:8px;border-radius:50%;background:${COLOR_4STAR};"></div>4★</div>`;
+    leg.innerHTML=`<div style="display:flex;align-items:center;gap:6px;font-size:16px;color:rgba(255,255,214,0.8);"><div style="width:8px;height:8px;border-radius:50%;background:${COLOR_5STAR};"></div>5★</div><div style="display:flex;align-items:center;gap:6px;font-size:16px;color:rgba(255,255,214,0.8);"><div style="width:8px;height:8px;border-radius:50%;background:${COLOR_4STAR};"></div>4★</div>`;
     rightPanel.appendChild(leg);
   }
 
@@ -852,7 +852,7 @@ const W=w, H=Math.floor(h*0.85), M={top:16,right:170,bottom:46,left:56};
     const clrBtn=document.createElement("div"); clrBtn.style.cssText=`padding:6px 12px;border-radius:12px;font-size:10px;cursor:pointer;border:1px solid rgba(255,100,100,0.4);color:rgba(255,100,100,0.8);text-align:center;flex-shrink:0;`; clrBtn.textContent="Clear Pinned"; clrBtn.addEventListener("click",()=>{ pinnedChars.clear(); renderLines(); }); controlsArea.appendChild(clrBtn);
 
     const {w, h} = window._getChartDims ? window._getChartDims() : {w:560, h:500};
-const BASE_W=w, H=Math.floor(h*0.85), M={top:16,right:16,bottom:46,left:52}, iH=H-M.top-M.bottom;
+const BASE_W=w, H=Math.floor(h*0.85), M={top:24,right:16,bottom:80,left:80}, iH=H-M.top-M.bottom;
     const {outerWrap,scrollWrap,scrollOuter}=makeZoomableChart(BASE_W);
     rightPanel.appendChild(outerWrap);
     const tooltip=makeTooltip(scrollWrap);
@@ -877,9 +877,9 @@ const BASE_W=w, H=Math.floor(h*0.85), M={top:16,right:16,bottom:46,left:52}, iH=
       const g=document.createElementNS("http://www.w3.org/2000/svg","g"); g.setAttribute("transform",`translate(${M.left},${M.top})`); svg.appendChild(g);
       const xS=i=>(i/(versionOrder.length-1))*iW, yS=v=>iH-(v/100)*iH;
       [0,25,50,75,100].forEach(v=>{ const l=document.createElementNS("http://www.w3.org/2000/svg","line"); l.setAttribute("x1","0"); l.setAttribute("x2",iW); l.setAttribute("y1",yS(v)); l.setAttribute("y2",yS(v)); l.setAttribute("stroke","rgba(255,255,214,0.1)"); l.setAttribute("stroke-width","1"); g.appendChild(l); const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x","-6"); t.setAttribute("y",yS(v)+4); t.setAttribute("text-anchor","end"); t.style.cssText=axisTextStyle; t.textContent=v+"%"; g.appendChild(t); });
-      versionOrder.forEach((id,i)=>{ if(i%8!==0) return; const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x",xS(i)); t.setAttribute("y",iH+14); t.setAttribute("text-anchor","middle"); t.style.cssText=axisTextStyle; t.textContent=versionLabels[i].replace(/\(Phase [IVX]+\)/,"").trim(); g.appendChild(t); });
-      const yL=document.createElementNS("http://www.w3.org/2000/svg","text"); yL.setAttribute("transform",`translate(-36,${iH/2}) rotate(-90)`); yL.setAttribute("text-anchor","middle"); yL.style.cssText=axisLabelStyle; yL.textContent="Use Rate %"; g.appendChild(yL);
-      const xL=document.createElementNS("http://www.w3.org/2000/svg","text"); xL.setAttribute("x",iW/2); xL.setAttribute("y",iH+36); xL.setAttribute("text-anchor","middle"); xL.style.cssText=axisLabelStyle; xL.textContent="Version"; g.appendChild(xL);
+      versionOrder.forEach((id,i)=>{ if(i%8!==0) return; const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x",xS(i)); t.setAttribute("y",iH+24); t.setAttribute("text-anchor","middle"); t.style.cssText=axisTextStyle; t.textContent=versionLabels[i].replace(/\(Phase [IVX]+\)/,"").trim(); g.appendChild(t); });
+      const yL=document.createElementNS("http://www.w3.org/2000/svg","text"); yL.setAttribute("transform",`translate(-60,${iH/2}) rotate(-90)`); yL.setAttribute("text-anchor","middle"); yL.style.cssText=axisLabelStyle; yL.textContent="Use Rate %"; g.appendChild(yL);
+      const xL=document.createElementNS("http://www.w3.org/2000/svg","text"); xL.setAttribute("x",iW/2); xL.setAttribute("y",iH+65); xL.setAttribute("text-anchor","middle"); xL.style.cssText=axisLabelStyle; xL.textContent="Version"; g.appendChild(xL);
       const hvLine=document.createElementNS("http://www.w3.org/2000/svg","line"); hvLine.setAttribute("y1","0"); hvLine.setAttribute("y2",iH); hvLine.setAttribute("stroke","rgba(255,255,214,0.35)"); hvLine.setAttribute("stroke-width","1"); hvLine.setAttribute("stroke-dasharray","4,4"); hvLine.style.display="none"; g.appendChild(hvLine);
       const hasPinned=pinnedChars.size>0;
       getFiltered().forEach(name=>{
@@ -890,7 +890,7 @@ const BASE_W=w, H=Math.floor(h*0.85), M={top:16,right:16,bottom:46,left:52}, iH=
         path.setAttribute("d",pts.map((p,i)=>`${i===0?'M':'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' '));
         path.setAttribute("fill","none");
         const baseColor=isPinned?(rarity===5?COLOR_5STAR:COLOR_4STAR):"rgba(255,255,214,0.15)";
-        path.setAttribute("stroke",baseColor); path.setAttribute("stroke-width",isPinned?"3":"1.5"); path.style.cursor="pointer"; path.setAttribute("stroke-linecap","round");
+        path.setAttribute("stroke",baseColor); path.setAttribute("stroke-width",isPinned?"2":"0.8"); path.style.cursor="pointer";
         const canHover=!hasPinned||isPinned;
         if(canHover){
           path.addEventListener("mouseenter",()=>{ if(!isPinned){path.setAttribute("stroke","#FFFFD6"); path.setAttribute("stroke-width","2");} tooltip.style.opacity="1"; });
@@ -902,7 +902,7 @@ const BASE_W=w, H=Math.floor(h*0.85), M={top:16,right:16,bottom:46,left:52}, iH=
             tooltip.innerHTML=`<b>${name}</b><br>Use rate: ${rate!==undefined?rate+"%":"N/A"}<br>${versionLabels[vi]}<br><span style="color:rgba(255,255,214,0.6);">${pull} pulled as of ${latestVersionLabel}</span>`;
             positionTooltip(tooltip,e,scrollWrap);
           });
-          path.addEventListener("mouseleave",()=>{ if(!isPinned){path.setAttribute("stroke",baseColor); path.setAttribute("stroke-width","1.5");} tooltip.style.opacity="0"; hvLine.style.display="none"; });
+          path.addEventListener("mouseleave",()=>{ if(!isPinned){path.setAttribute("stroke",baseColor); path.setAttribute("stroke-width","0.8");} tooltip.style.opacity="0"; hvLine.style.display="none"; });
         }
         path.addEventListener("click",()=>{ if(pinnedChars.has(name)) pinnedChars.delete(name); else pinnedChars.add(name); renderLines(); pinnedPanel2.update(pinnedChars); });
         g.appendChild(path);
@@ -1000,11 +1000,11 @@ t.setAttribute("transform",`rotate(-40, ${x+bW2/2}, ${biH+16})`);
     Object.keys(abyssAvg).forEach(cat=>{ Object.keys(abyssAvg[cat]).forEach(vid=>{ const arr=abyssAvg[cat][vid]; abyssAvg[cat][vid]=arr.reduce((a,b)=>a+b,0)/arr.length; }); });
 
     const bT=document.createElement("div"); bT.style.cssText=`font-size:11px;color:rgba(255,255,214,0.9);flex-shrink:0;`; bT.textContent=`Pull Rate · ${category}`; rightPanel.appendChild(bT);
-    const {w, h} = window._getChartDims ? window._getChartDims() : {w:560, h:220};
-const BW=w, BH=Math.floor(h*0.25), BM={top:8,right:12,bottom:80,left:100};
+    const {w:_tw3, h:_th3} = window._getChartDims ? window._getChartDims() : {w:700, h:700};
+    const BW=_tw3, BH=Math.floor(_th3*0.28), BM={top:16,right:12,bottom:100,left:100};
     const biW=BW-BM.left-BM.right, biH=BH-BM.top-BM.bottom;
-    const bWrap=document.createElement("div"); bWrap.style.cssText=`position:relative;flex-shrink:0;`;
-    const bSvg=document.createElementNS("http://www.w3.org/2000/svg","svg"); bSvg.setAttribute("viewBox",`0 0 ${BW} ${BH}`); bSvg.style.cssText=`width:100%;height:${BH}px;`;
+    const bWrap=document.createElement("div"); bWrap.style.cssText=`position:relative;flex-shrink:0;width:100%;`;
+    const bSvg=document.createElementNS("http://www.w3.org/2000/svg","svg"); bSvg.setAttribute("viewBox",`0 0 ${BW} ${BH}`); bSvg.style.cssText=`width:100%;height:${BH}px;display:block;`;
     bWrap.appendChild(bSvg); rightPanel.appendChild(bWrap);
     const bg=document.createElementNS("http://www.w3.org/2000/svg","g"); bg.setAttribute("transform",`translate(${BM.left},${BM.top})`); bSvg.appendChild(bg);
     const pullMax=pullEntries[0]?.[1]||1, bW2=biW/pullEntries.length*0.6, bGap=biW/pullEntries.length;
@@ -1019,11 +1019,11 @@ const BW=w, BH=Math.floor(h*0.25), BM={top:8,right:12,bottom:80,left:100};
       const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x",x+bW2/2); t.setAttribute("y",biH+12); t.setAttribute("text-anchor","end"); t.setAttribute("transform",`rotate(-35, ${x+bW2/2}, ${biH+12})`); t.style.cssText=axisTextStyle; t.textContent=cat; bg.appendChild(t);
     });
     [0,0.5,1].forEach(pct=>{ const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x","-6"); t.setAttribute("y",biH-pct*biH+4); t.setAttribute("text-anchor","end"); t.style.cssText=axisTextStyle; t.textContent=(pct*pullMax/1000000).toFixed(1)+"M"; bg.appendChild(t); });
-    const bLeg=document.createElement("div"); bLeg.style.cssText=`display:flex;flex-wrap:wrap;gap:8px;flex-shrink:0;padding:2px 0 4px;`; cats.forEach(cat=>{ const item=document.createElement("div"); item.style.cssText=`display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,214,0.8);`; item.innerHTML=`<div style="width:8px;height:8px;border-radius:2px;background:${catColors[cat]};"></div>${cat}`; bLeg.appendChild(item); }); rightPanel.appendChild(bLeg);
+    const bLeg=document.createElement("div"); bLeg.style.cssText=`display:flex;flex-wrap:wrap;gap:8px;flex-shrink:0;padding:2px 0 4px;`; cats.forEach(cat=>{ const item=document.createElement("div"); item.style.cssText=`display:flex;align-items:center;gap:6px;font-size:16px;color:rgba(255,255,214,0.8);`; item.innerHTML=`<div style="width:8px;height:8px;border-radius:2px;background:${catColors[cat]};"></div>${cat}`; bLeg.appendChild(item); }); rightPanel.appendChild(bLeg);
 
     const lT=document.createElement("div"); lT.style.cssText=`font-size:11px;color:rgba(255,255,214,0.9);flex-shrink:0;`; lT.textContent=`Abyss Use Rate · ${category}`; rightPanel.appendChild(lT);
-    const BASE_LW=w, LH=Math.floor(h*0.35);
-    const LM={top:8,right:16,bottom:44,left:52}, liH=LH-LM.top-LM.bottom;
+    const BASE_LW=_tw3, LH=Math.floor(_th3*0.40);
+    const LM={top:16,right:16,bottom:80,left:80}, liH=LH-LM.top-LM.bottom;
     const {outerWrap:lOuter,scrollWrap:lScroll}=makeZoomableChart(BASE_LW);
     rightPanel.appendChild(lOuter);
     const lTip=makeTooltip(lScroll);
@@ -1038,8 +1038,8 @@ const BW=w, BH=Math.floor(h*0.25), BM={top:8,right:12,bottom:80,left:100};
       const allV=Object.values(abyssAvg).flatMap(v=>Object.values(v)), yMax=Math.ceil(Math.max(...allV,10)/10)*10;
       const xSc=i=>(i/(versionOrder.length-1))*liW, ySc=v=>liH-(v/yMax)*liH;
       [0,0.5,1].forEach(pct=>{ const v=pct*yMax; const l=document.createElementNS("http://www.w3.org/2000/svg","line"); l.setAttribute("x1","0"); l.setAttribute("x2",liW); l.setAttribute("y1",ySc(v)); l.setAttribute("y2",ySc(v)); l.setAttribute("stroke","rgba(255,255,214,0.1)"); l.setAttribute("stroke-width","1"); lg.appendChild(l); const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x","-6"); t.setAttribute("y",ySc(v)+4); t.setAttribute("text-anchor","end"); t.style.cssText=axisTextStyle; t.textContent=Math.round(v)+"%"; lg.appendChild(t); });
-      versionOrder.forEach((id,i)=>{ if(i%10!==0) return; const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x",xSc(i)); t.setAttribute("y",liH+14); t.setAttribute("text-anchor","middle"); t.style.cssText=axisTextStyle; t.textContent=versionLabels[i].replace(/\(Phase [IVX]+\)/,"").trim(); lg.appendChild(t); });
-      const yL2=document.createElementNS("http://www.w3.org/2000/svg","text"); yL2.setAttribute("transform",`translate(-36,${liH/2}) rotate(-90)`); yL2.setAttribute("text-anchor","middle"); yL2.style.cssText=axisLabelStyle; yL2.textContent="Use Rate %"; lg.appendChild(yL2);
+      versionOrder.forEach((id,i)=>{ if(i%10!==0) return; const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x",xSc(i)); t.setAttribute("y",liH+24); t.setAttribute("text-anchor","middle"); t.style.cssText=axisTextStyle; t.textContent=versionLabels[i].replace(/\(Phase [IVX]+\)/,"").trim(); lg.appendChild(t); });
+      const yL2=document.createElementNS("http://www.w3.org/2000/svg","text"); yL2.setAttribute("transform",`translate(-60,${liH/2}) rotate(-90)`); yL2.setAttribute("text-anchor","middle"); yL2.style.cssText=axisLabelStyle; yL2.textContent="Use Rate %"; lg.appendChild(yL2);
       const hvL=document.createElementNS("http://www.w3.org/2000/svg","line"); hvL.setAttribute("y1","0"); hvL.setAttribute("y2",liH); hvL.setAttribute("stroke","rgba(255,255,214,0.35)"); hvL.setAttribute("stroke-width","1"); hvL.setAttribute("stroke-dasharray","4,4"); hvL.style.display="none"; lg.appendChild(hvL);
       const hasPinned=pinnedCats.size>0;
       cats.forEach(cat=>{
@@ -1062,13 +1062,13 @@ const BW=w, BH=Math.floor(h*0.25), BM={top:8,right:12,bottom:80,left:100};
             lTip.innerHTML=`<b>${cat}</b><br>Avg use rate: ${rate!==undefined?rate.toFixed(1)+"%":"N/A"}<br>${versionLabels[vi]}`;
             positionTooltip(lTip,e,lScroll);
           });
-          path.addEventListener("mouseleave",()=>{ if(!isPinned){path.setAttribute("stroke",baseColor); path.setAttribute("stroke-width","1.5");} lTip.style.opacity="0"; hvL.style.display="none"; });
+          path.addEventListener("mouseleave",()=>{ if(!isPinned){path.setAttribute("stroke",baseColor); path.setAttribute("stroke-width","0.8");} lTip.style.opacity="0"; hvL.style.display="none"; });
         }
         path.addEventListener("click",()=>{ if(pinnedCats.has(cat)) pinnedCats.delete(cat); else pinnedCats.add(cat); renderLineChart(); });
         lg.appendChild(path);
       });
       const lineLeg=document.createElement("div"); lineLeg.className="tab3leg"; lineLeg.style.cssText=`display:flex;flex-wrap:wrap;gap:8px;flex-shrink:0;padding:4px 0 0;`;
-      cats.forEach(cat=>{ const isPinned=pinnedCats.has(cat); const item=document.createElement("div"); item.style.cssText=`display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,214,${isPinned?'1':'0.6'});cursor:pointer;`; item.innerHTML=`<div style="width:16px;height:2px;background:${catColors[cat]};border-radius:1px;opacity:${isPinned?'1':'0.5'};"></div>${cat}`; item.addEventListener("click",()=>{ if(pinnedCats.has(cat)) pinnedCats.delete(cat); else pinnedCats.add(cat); renderLineChart(); }); lineLeg.appendChild(item); });
+      cats.forEach(cat=>{ const isPinned=pinnedCats.has(cat); const item=document.createElement("div"); item.style.cssText=`display:flex;align-items:center;gap:6px;font-size:16px;color:rgba(255,255,214,${isPinned?'1':'0.6'});cursor:pointer;`; item.innerHTML=`<div style="width:16px;height:2px;background:${catColors[cat]};border-radius:1px;opacity:${isPinned?'1':'0.5'};"></div>${cat}`; item.addEventListener("click",()=>{ if(pinnedCats.has(cat)) pinnedCats.delete(cat); else pinnedCats.add(cat); renderLineChart(); }); lineLeg.appendChild(item); });
       rightPanel.appendChild(lineLeg);
     }
     lOuter.querySelectorAll("[data-zoom]").forEach(btn=>btn.addEventListener("click",()=>setTimeout(()=>renderLineChart(),10)));
