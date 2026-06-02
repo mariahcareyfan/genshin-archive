@@ -99,7 +99,12 @@ window.showScreen = function(name) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById("screen-" + name).classList.add("active");
 };
-
+setTimeout(() => {
+  console.log("landing div:", document.getElementById("screen-landing").children.length);
+  console.log("map div:", document.getElementById("screen-map").children.length);
+  console.log("analysis div:", document.getElementById("screen-analysis").children.length);
+  console.log("disclaimer div:", document.getElementById("screen-disclaimer").children.length);
+}, 5000);
 </script>
 </body>
 </html>
