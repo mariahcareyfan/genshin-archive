@@ -585,8 +585,8 @@ async function _analysisSection(FileAttachment,characters,galaxyBg)
   const inputStyle = `background:rgba(255,255,214,0.08);border:1px solid rgba(255,255,214,0.3);color:#FFFFD6;padding:8px 12px;border-radius:16px;font-family:'GenshinFont',sans-serif;font-size:12px;outline:none;width:100%;box-sizing:border-box;`;
   const selectStyle = `background:rgba(255,255,214,0.08);border:1px solid rgba(255,255,214,0.3);color:#FFFFD6;padding:8px 12px;border-radius:16px;font-family:'GenshinFont',sans-serif;font-size:12px;cursor:pointer;outline:none;width:100%;box-sizing:border-box;`;
   const labelStyle = `font-size:10px;color:rgba(255,255,214,0.8);letter-spacing:0px;text-transform:uppercase;margin-bottom:4px;`;
-  const axisTextStyle = `fill:rgba(255,255,214,1);font-size:9px;font-family:'GenshinFont',sans-serif;`;
-  const axisLabelStyle = `fill:#FFFFD6;font-size:10px;font-family:'GenshinFont',sans-serif;`;
+  const axisTextStyle = `fill:rgba(255,255,214,1);font-size:16px;font-family:'GenshinFont',sans-serif;`;
+  const axisLabelStyle = `fill:#FFFFD6;font-size:24px;font-family:'GenshinFont',sans-serif;`;
 
   // DATA
   const charMap = {};
