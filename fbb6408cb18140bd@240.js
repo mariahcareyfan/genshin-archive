@@ -288,11 +288,13 @@ async function _mapSection(d3,mapImage,regions,labelsImage,characters,icons,spla
   window.openCharacterCard(d);
 });
 
-  const zoom = d3.zoom()
-    .scaleExtent([0.05, 8])
-    .on("zoom", e => g.attr("transform", e.transform));
+const zoom = d3.zoom()
+.scaleExtent([Math.min(window.innerWidth / mapW, window.innerHeight / mapH), 8])
+.on("zoom", e => g.attr("transform", e.transform));
 
   svg.call(zoom);
+
+
 
   function clickRegion(r, path) {
     const scale = Math.max(1, Math.min(8, 1.2 / Math.max(r.w / mapW, r.h / mapH)));
@@ -336,9 +338,8 @@ async function _mapSection(d3,mapImage,regions,labelsImage,characters,icons,spla
       g.selectAll(".char-icon").transition().duration(750).attr("opacity", 0);
       labels.transition().duration(750).attr("opacity", 1);
       Object.values(regionPaths).forEach(p => p.transition().duration(750).attr("opacity", 1));
-      const _rs = Math.min(wrapper.clientWidth/mapW, wrapper.clientHeight/mapH);
-      svg.transition().duration(750).call(zoom.transform,
-        d3.zoomIdentity.translate((wrapper.clientWidth-mapW*_rs)/2,(wrapper.clientHeight-mapH*_rs)/2).scale(_rs));
+      const _rs=Math.min(wrapper.clientWidth/mapW,wrapper.clientHeight/mapH);
+      svg.transition().duration(750).call(zoom.transform,d3.zoomIdentity.translate((wrapper.clientWidth-mapW*_rs)/2,(wrapper.clientHeight-mapH*_rs)/2).scale(_rs));
     }
   });
 
@@ -348,11 +349,9 @@ wrapper.id = "map-section";
 wrapper.style.cssText = "position:relative; overflow:hidden; width:100vw; height:100vh;";
   wrapper.appendChild(svg.node());
 
-  // fit map to screen once wrapper is in DOM
   requestAnimationFrame(() => {
-    const _is = Math.min(wrapper.clientWidth/mapW, wrapper.clientHeight/mapH);
-    svg.call(zoom.transform,
-      d3.zoomIdentity.translate((wrapper.clientWidth-mapW*_is)/2,(wrapper.clientHeight-mapH*_is)/2).scale(_is));
+    const _is=Math.min(wrapper.clientWidth/mapW,wrapper.clientHeight/mapH);
+    svg.call(zoom.transform,d3.zoomIdentity.translate((wrapper.clientWidth-mapW*_is)/2,(wrapper.clientHeight-mapH*_is)/2).scale(_is));
   });
 
   const mapBackBtn = document.createElement("div");
@@ -913,8 +912,8 @@ const BASE_W=w, H=Math.floor(h*0.85), M={top:16,right:16,bottom:46,left:52}, iH=
         }
         path.addEventListener("click",()=>{ if(pinnedChars.has(name)) pinnedChars.delete(name); else pinnedChars.add(name); renderLines(); pinnedPanel2.update(pinnedChars); });
         const hitbox=document.createElementNS("http://www.w3.org/2000/svg","path");
-        hitbox.setAttribute("d",pathD); hitbox.setAttribute("fill","none");
-        hitbox.setAttribute("stroke","transparent"); hitbox.setAttribute("stroke-width","12");
+        hitbox.setAttribute("d",pathD);hitbox.setAttribute("fill","none");
+        hitbox.setAttribute("stroke","transparent");hitbox.setAttribute("stroke-width","12");
         hitbox.style.cursor="pointer";
         if(canHover){
           hitbox.addEventListener("mouseenter",e=>path.dispatchEvent(new MouseEvent("mouseenter",e)));
@@ -922,7 +921,7 @@ const BASE_W=w, H=Math.floor(h*0.85), M={top:16,right:16,bottom:46,left:52}, iH=
           hitbox.addEventListener("mouseleave",e=>path.dispatchEvent(new MouseEvent("mouseleave",e)));
         }
         hitbox.addEventListener("click",e=>path.dispatchEvent(new MouseEvent("click",e)));
-        g.appendChild(path); g.appendChild(hitbox);
+        g.appendChild(path);g.appendChild(hitbox);
       });
       pinnedPanel2.update(pinnedChars);
       const note=document.createElement("div"); note.className="tab2note"; note.style.cssText=`flex-shrink:0;font-size:10px;color:rgba(255,255,214,0.5);`; note.textContent="Click a line to pin · hover disabled for others when pinned"; rightPanel.appendChild(note);
@@ -1017,8 +1016,8 @@ t.setAttribute("transform",`rotate(-40, ${x+bW2/2}, ${biH+16})`);
     Object.keys(abyssAvg).forEach(cat=>{ Object.keys(abyssAvg[cat]).forEach(vid=>{ const arr=abyssAvg[cat][vid]; abyssAvg[cat][vid]=arr.reduce((a,b)=>a+b,0)/arr.length; }); });
 
     const bT=document.createElement("div"); bT.style.cssText=`font-size:11px;color:rgba(255,255,214,0.9);flex-shrink:0;`; bT.textContent=`Pull Rate · ${category}`; rightPanel.appendChild(bT);
-    const {w:_tw3, h:_th3} = window._getChartDims ? window._getChartDims() : {w:700, h:700};
-    const BW=_tw3, BH=Math.floor(_th3*0.28), BM={top:8,right:12,bottom:80,left:100};
+    const {w, h} = window._getChartDims ? window._getChartDims() : {w:560, h:220};
+const BW=w, BH=Math.floor(h*0.25), BM={top:8,right:12,bottom:80,left:100};
     const biW=BW-BM.left-BM.right, biH=BH-BM.top-BM.bottom;
     const bWrap=document.createElement("div"); bWrap.style.cssText=`position:relative;flex-shrink:0;`;
     const bSvg=document.createElementNS("http://www.w3.org/2000/svg","svg"); bSvg.setAttribute("viewBox",`0 0 ${BW} ${BH}`); bSvg.style.cssText=`width:100%;height:${BH}px;`;
@@ -1039,7 +1038,7 @@ t.setAttribute("transform",`rotate(-40, ${x+bW2/2}, ${biH+16})`);
     const bLeg=document.createElement("div"); bLeg.style.cssText=`display:flex;flex-wrap:wrap;gap:8px;flex-shrink:0;padding:2px 0 4px;`; cats.forEach(cat=>{ const item=document.createElement("div"); item.style.cssText=`display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,214,0.8);`; item.innerHTML=`<div style="width:8px;height:8px;border-radius:2px;background:${catColors[cat]};"></div>${cat}`; bLeg.appendChild(item); }); rightPanel.appendChild(bLeg);
 
     const lT=document.createElement("div"); lT.style.cssText=`font-size:11px;color:rgba(255,255,214,0.9);flex-shrink:0;`; lT.textContent=`Abyss Use Rate · ${category}`; rightPanel.appendChild(lT);
-    const BASE_LW=_tw3, LH=Math.floor(_th3*0.40);
+    const BASE_LW=w, LH=Math.floor(h*0.35);
     const LM={top:8,right:16,bottom:44,left:52}, liH=LH-LM.top-LM.bottom;
     const {outerWrap:lOuter,scrollWrap:lScroll}=makeZoomableChart(BASE_LW);
     rightPanel.appendChild(lOuter);
