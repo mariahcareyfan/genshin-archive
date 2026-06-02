@@ -294,11 +294,15 @@ const zoom = d3.zoom()
 
   svg.call(zoom);
 
-  // fit map to screen on load
-  const fitScale = Math.min(window.innerWidth / mapW, window.innerHeight / mapH) * 1.0;
-  const fitX = (window.innerWidth - mapW * fitScale) / 2;
-  const fitY = (window.innerHeight - mapH * fitScale) / 2;
-  svg.call(zoom.transform, d3.zoomIdentity.translate(fitX, fitY).scale(fitScale));
+  const fitScale = Math.min(window.innerWidth / mapW, window.innerHeight / mapH) * 0.95;
+const fitX = (window.innerWidth - mapW * fitScale) / 2;
+const fitY = (window.innerHeight - mapH * fitScale) / 2;
+svg.call(zoom.transform, d3.zoomIdentity.translate(fitX, fitY).scale(fitScale));
+
+  const initialScale = Math.min(window.innerWidth / mapW, window.innerHeight / mapH);
+svg.call(zoom.transform, d3.zoomIdentity
+  .translate((window.innerWidth - mapW * initialScale) / 2, (window.innerHeight - mapH * initialScale) / 2)
+  .scale(initialScale));
 
   function clickRegion(r, path) {
     const scale = Math.max(1, Math.min(8, 1.2 / Math.max(r.w / mapW, r.h / mapH)));
@@ -333,8 +337,10 @@ const zoom = d3.zoom()
     labels.transition().duration(750).attr("opacity", 0);
     Object.values(regionPaths).forEach(p => p.transition().duration(750).attr("opacity", 0));
 
-    svg.transition().duration(750).call(zoom.transform,
-      d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
+    const fitScale = Math.min(window.innerWidth / mapW, window.innerHeight / mapH) * 0.95;
+const fitX = (window.innerWidth - mapW * fitScale) / 2;
+const fitY = (window.innerHeight - mapH * fitScale) / 2;
+svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity.translate(fitX, fitY).scale(fitScale));
   }
 
   svg.on("click", function(event) {
@@ -342,10 +348,7 @@ const zoom = d3.zoom()
       g.selectAll(".char-icon").transition().duration(750).attr("opacity", 0);
       labels.transition().duration(750).attr("opacity", 1);
       Object.values(regionPaths).forEach(p => p.transition().duration(750).attr("opacity", 1));
-      const _fitScale = Math.min(window.innerWidth / mapW, window.innerHeight / mapH) * 1.0;
-      const _fitX = (window.innerWidth - mapW * _fitScale) / 2;
-      const _fitY = (window.innerHeight - mapH * _fitScale) / 2;
-      svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity.translate(_fitX, _fitY).scale(_fitScale));
+      svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
     }
   });
 
@@ -754,7 +757,7 @@ async function _analysisSection(FileAttachment,characters,galaxyBg)
     panelDesc.textContent="Each dot is a character. X = ownership %, Y = Abyss use rate. Click to pin.";
     controlsArea.innerHTML=""; rightPanel.innerHTML="";
     rightPanel.style.position="relative";
-    let highlighted = null;
+    let highlighted = new Set();
 
     // Build pinned panel AFTER globalLatestData is available (it's defined at top)
     const pinnedPanel = buildPinnedPanel(
@@ -763,11 +766,11 @@ async function _analysisSection(FileAttachment,characters,galaxyBg)
         const char = charMap[name] || {};
         return { rarity: +char.Rarity||4, lines:[`Own: ${d.own_rate??'N/A'}%`,`Use: ${d.use_rate??'N/A'}%`] };
       },
-      name => { highlighted=null; renderDots(); pinnedPanel.update(new Set()); }
+      name => { highlighted.delete(name); renderDots(); pinnedPanel.update(highlighted); }
     );
     rightPanel.appendChild(pinnedPanel);
 
-    const charSearch = buildCharSearch(name => { highlighted=highlighted===name?null:name; renderDots(); pinnedPanel.update(highlighted?new Set([highlighted]):new Set()); });
+    const charSearch = buildCharSearch(name => { if(highlighted.has(name)) highlighted.delete(name); else highlighted.add(name); renderDots(); pinnedPanel.update(highlighted); });
     controlsArea.appendChild(charSearch);
 
     const {w, h} = window._getChartDims ? window._getChartDims() : {w:560, h:400};
@@ -794,18 +797,18 @@ const W=w, H=Math.floor(h*0.85), M={top:16,right:170,bottom:46,left:56};
       dotsGroup.innerHTML="";
       globalLatestData.forEach(d=>{
         const char=charMap[d.name]; const rarity=char?+char.Rarity:4;
-        const isHL=highlighted===d.name;
+        const isHL=highlighted.has(d.name);
         const color=rarity===5?COLOR_5STAR:COLOR_4STAR;
-        const opacity=highlighted?(isHL?1:0.12):0.75;
-        const r=isHL?7:5;
+        const opacity=highlighted.size>0?(isHL?1:0.12):0.75;
+        const r=isHL?8:5;
         const circle=document.createElementNS("http://www.w3.org/2000/svg","circle");
         circle.setAttribute("cx",xScale(d.own_rate)); circle.setAttribute("cy",yScale(d.use_rate));
         circle.setAttribute("r",r); circle.setAttribute("fill",color); circle.setAttribute("fill-opacity",opacity);
         circle.style.cursor="pointer";
         circle.addEventListener("mouseenter",()=>{ circle.setAttribute("r","8"); circle.setAttribute("fill-opacity","1"); tooltip.style.opacity="1"; tooltip.innerHTML=`<b>${d.name}</b><br>Own: ${d.own_rate}% · Use: ${d.use_rate}%`; });
         circle.addEventListener("mousemove",e=>positionTooltip(tooltip,e,wrap));
-        circle.addEventListener("mouseleave",()=>{ circle.setAttribute("r",isHL?"7":"5"); circle.setAttribute("fill-opacity",highlighted?(isHL?1:0.12):0.75); tooltip.style.opacity="0"; });
-        circle.addEventListener("click",()=>{ highlighted=highlighted===d.name?null:d.name; renderDots(); pinnedPanel.update(highlighted?new Set([highlighted]):new Set()); });
+        circle.addEventListener("mouseleave",()=>{ circle.setAttribute("r",isHL?"7":"5"); circle.setAttribute("fill-opacity",highlighted.size>0?(isHL?1:0.12):0.75); tooltip.style.opacity="0"; });
+        circle.addEventListener("click",()=>{ if(highlighted.has(d.name)) highlighted.delete(d.name); else highlighted.add(d.name); renderDots(); pinnedPanel.update(highlighted); });
         dotsGroup.appendChild(circle);
       });
     }
@@ -988,7 +991,7 @@ t.setAttribute("transform",`rotate(-40, ${x+bW2/2}, ${biH+16})`);
   return; // skip the rest of drawTab3
 }
     panelTitle.textContent="Pull Rate Ranking by Category";
-    panelDesc.textContent="Bar: total pulls by category. Line: avg Abyss use rate over time. Hover for details. Data from V3.0";
+    panelDesc.textContent="Bar: total pulls by category. Line: avg Abyss use rate over time. Hover for details. Data from V3.0 - V6.5";
     controlsArea.innerHTML=""; rightPanel.innerHTML="";
     const dLbl=document.createElement("div"); dLbl.style.cssText=labelStyle; dLbl.textContent="CATEGORY";
     const dd=document.createElement("select"); dd.style.cssText=selectStyle;
@@ -1007,9 +1010,8 @@ t.setAttribute("transform",`rotate(-40, ${x+bW2/2}, ${biH+16})`);
     Object.keys(abyssAvg).forEach(cat=>{ Object.keys(abyssAvg[cat]).forEach(vid=>{ const arr=abyssAvg[cat][vid]; abyssAvg[cat][vid]=arr.reduce((a,b)=>a+b,0)/arr.length; }); });
 
     const bT=document.createElement("div"); bT.style.cssText=`font-size:11px;color:rgba(255,255,214,0.9);flex-shrink:0;`; bT.textContent=`Pull Rate · ${category}`; rightPanel.appendChild(bT);
-    const {w:_tw, h:_th} = window._getChartDims ? window._getChartDims() : {w:560, h:500};
-    const BW=_tw, BH=Math.floor(_th*0.28), BM={top:8,right:12,bottom:80,left:100};
-    const biW=BW-BM.left-BM.right, biH=BH-BM.top-BM.bottom;
+    const {w, h} = window._getChartDims ? window._getChartDims() : {w:560, h:220};
+const BW=w, BH=Math.floor(h*0.25), BM={top:8,right:12,bottom:80,left:100};
     const bWrap=document.createElement("div"); bWrap.style.cssText=`position:relative;flex-shrink:0;`;
     const bSvg=document.createElementNS("http://www.w3.org/2000/svg","svg"); bSvg.setAttribute("viewBox",`0 0 ${BW} ${BH}`); bSvg.style.cssText=`width:100%;height:${BH}px;`;
     bWrap.appendChild(bSvg); rightPanel.appendChild(bWrap);
@@ -1029,7 +1031,7 @@ t.setAttribute("transform",`rotate(-40, ${x+bW2/2}, ${biH+16})`);
     const bLeg=document.createElement("div"); bLeg.style.cssText=`display:flex;flex-wrap:wrap;gap:8px;flex-shrink:0;padding:2px 0 4px;`; cats.forEach(cat=>{ const item=document.createElement("div"); item.style.cssText=`display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,214,0.8);`; item.innerHTML=`<div style="width:8px;height:8px;border-radius:2px;background:${catColors[cat]};"></div>${cat}`; bLeg.appendChild(item); }); rightPanel.appendChild(bLeg);
 
     const lT=document.createElement("div"); lT.style.cssText=`font-size:11px;color:rgba(255,255,214,0.9);flex-shrink:0;`; lT.textContent=`Abyss Use Rate · ${category}`; rightPanel.appendChild(lT);
-    const BASE_LW=_tw, LH=Math.floor(_th*0.38), LM={top:8,right:16,bottom:44,left:52}, liH=LH-LM.top-LM.bottom;
+    const BASE_LW=w, LH=Math.floor(h*0.35);
     const {outerWrap:lOuter,scrollWrap:lScroll}=makeZoomableChart(BASE_LW);
     rightPanel.appendChild(lOuter);
     const lTip=makeTooltip(lScroll);
