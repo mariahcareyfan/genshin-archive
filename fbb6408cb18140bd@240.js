@@ -289,20 +289,12 @@ async function _mapSection(d3,mapImage,regions,labelsImage,characters,icons,spla
 });
 
 const zoom = d3.zoom()
-.scaleExtent([Math.min(window.innerWidth / mapW, window.innerHeight / mapH), 8])
+.scaleExtent([1, 8])
 .on("zoom", e => g.attr("transform", e.transform));
 
   svg.call(zoom);
 
-  const fitScale = Math.min(window.innerWidth / mapW, window.innerHeight / mapH) * 0.95;
-const fitX = (window.innerWidth - mapW * fitScale) / 2;
-const fitY = (window.innerHeight - mapH * fitScale) / 2;
-svg.call(zoom.transform, d3.zoomIdentity.translate(fitX, fitY).scale(fitScale));
 
-  const initialScale = Math.min(window.innerWidth / mapW, window.innerHeight / mapH);
-svg.call(zoom.transform, d3.zoomIdentity
-  .translate((window.innerWidth - mapW * initialScale) / 2, (window.innerHeight - mapH * initialScale) / 2)
-  .scale(initialScale));
 
   function clickRegion(r, path) {
     const scale = Math.max(1, Math.min(8, 1.2 / Math.max(r.w / mapW, r.h / mapH)));
@@ -337,10 +329,8 @@ svg.call(zoom.transform, d3.zoomIdentity
     labels.transition().duration(750).attr("opacity", 0);
     Object.values(regionPaths).forEach(p => p.transition().duration(750).attr("opacity", 0));
 
-    const fitScale = Math.min(window.innerWidth / mapW, window.innerHeight / mapH) * 0.95;
-const fitX = (window.innerWidth - mapW * fitScale) / 2;
-const fitY = (window.innerHeight - mapH * fitScale) / 2;
-svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity.translate(fitX, fitY).scale(fitScale));
+    svg.transition().duration(750).call(zoom.transform,
+      d3.zoomIdentity.translate(translate[0], translate[1]).scale(scale));
   }
 
   svg.on("click", function(event) {
@@ -1012,6 +1002,7 @@ t.setAttribute("transform",`rotate(-40, ${x+bW2/2}, ${biH+16})`);
     const bT=document.createElement("div"); bT.style.cssText=`font-size:11px;color:rgba(255,255,214,0.9);flex-shrink:0;`; bT.textContent=`Pull Rate · ${category}`; rightPanel.appendChild(bT);
     const {w:_tw3, h:_th3} = window._getChartDims ? window._getChartDims() : {w:700, h:700};
     const BW=_tw3, BH=Math.floor(_th3*0.40), BM={top:16,right:12,bottom:100,left:100};
+    const biW=BW-BM.left-BM.right, biH=BH-BM.top-BM.bottom;
     const bWrap=document.createElement("div"); bWrap.style.cssText=`position:relative;flex-shrink:0;`;
     const bSvg=document.createElementNS("http://www.w3.org/2000/svg","svg"); bSvg.setAttribute("viewBox",`0 0 ${BW} ${BH}`); bSvg.style.cssText=`width:100%;height:${BH}px;`;
     bWrap.appendChild(bSvg); rightPanel.appendChild(bWrap);
@@ -1032,6 +1023,7 @@ t.setAttribute("transform",`rotate(-40, ${x+bW2/2}, ${biH+16})`);
 
     const lT=document.createElement("div"); lT.style.cssText=`font-size:11px;color:rgba(255,255,214,0.9);flex-shrink:0;`; lT.textContent=`Abyss Use Rate · ${category}`; rightPanel.appendChild(lT);
     const BASE_LW=_tw3, LH=Math.floor(_th3*0.38);
+    const LM={top:16,right:16,bottom:80,left:80}, liH=LH-LM.top-LM.bottom;
     const {outerWrap:lOuter,scrollWrap:lScroll}=makeZoomableChart(BASE_LW);
     rightPanel.appendChild(lOuter);
     const lTip=makeTooltip(lScroll);
