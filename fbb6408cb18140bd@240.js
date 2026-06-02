@@ -225,7 +225,7 @@ function _regions(){return(
 ]
 )}
 
-async function _mapSection(d3,mapImage,regions,labelsImage,characters,icons,mapBackBtnackBtn,splashArts)
+async function _mapSection(d3,mapImage,regions,labelsImage,characters,icons,mapBackBtn,splashArts)
 {
   const mapW = 9309, mapH = 7370;
 
@@ -350,7 +350,7 @@ mapBackBtn.style.cssText = `position:absolute;top:16px;right:16px;cursor:pointer
 mapBackBtn.innerHTML = `<svg width="48" height="48" viewBox="0 0 77 77" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="38.0107" cy="38.0107" r="31.0107" fill="#EBE7D8"/><circle cx="38.0107" cy="38.0107" r="34.5107" stroke="#EBE7D8" stroke-opacity="0.5" stroke-width="7"/><path d="M37.1631 28.0425C44.8237 27.1751 58.0352 31.0762 58.0352 42.3267C58.0351 57.1389 41.9149 60.2895 33.8545 60.0132C39.8421 59.5526 51.8169 56.6969 51.8174 48.9595C51.8174 41.7854 42.7114 40.4718 37.1631 40.7222V50.1372C35.0976 45.255 23.1413 37.0092 17.9863 34.8784C23.1413 32.7476 35.0977 24.5018 37.1631 19.6196V28.0425Z" fill="#3C4255"/></svg>`;
 mapBackBtn.addEventListener("mouseenter", () => mapBackBtn.style.transform = "scale(1.08)");
 mapBackBtn.addEventListener("mouseleave", () => mapBackBtn.style.transform = "scale(1)");
-mapBackBtnackBtn.addEventListener("click", () => {
+mapBackBtn.addEventListener("click", () => {
   window.showScreen('landing');
 });
 wrapper.appendChild(mapBackBtn);
@@ -1836,7 +1836,7 @@ export default function define(runtime, observer) {
   main.variable(observer()).define(["html"], _9);
   main.variable(observer("landingScreen")).define("landingScreen", ["galaxyBg","fontUrl","mapIconSvg","analysisIconSvg"], _landingScreen);
   main.variable(observer("regions")).define("regions", _regions);
-  main.variable(observer("mapSection")).define("mapSection", ["d3","mapImage","regions","labelsImage","characters","icons","mapBackBtnackBtn","splashArts"], _mapSection);
+  main.variable(observer("mapSection")).define("mapSection", ["d3","mapImage","regions","labelsImage","characters","icons","mapBackBtn","splashArts"], _mapSection);
   main.variable(observer("analysisSection")).define("analysisSection", ["FileAttachment","characters","galaxyBg"], _analysisSection);
   main.variable(observer("disclaimerSection")).define("disclaimerSection", ["FileAttachment","galaxyBg"], _disclaimerSection);
   main.variable(observer("characters")).define("characters", ["FileAttachment"], _characters);
