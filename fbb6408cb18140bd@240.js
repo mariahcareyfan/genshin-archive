@@ -811,7 +811,7 @@ const W=w, H=Math.floor(h*0.85), M={top:24,right:190,bottom:80,left:80};
   // TAB 2
   function drawTab2() {
     panelTitle.textContent="Spiral Abyss Usage Over Time";
-    panelDesc.textContent="Hover a line to see use rate + pull count. Click to pin. Pinned lines disable hover on others. Data from V3.0";
+    panelDesc.textContent="Hover a line to see use rate + pull count. Click to pin. Pinned lines disable hover on others. Data from V3.0 - V6.5";
     controlsArea.innerHTML=""; rightPanel.innerHTML="";
     rightPanel.style.position="relative";
     let pinnedChars=new Set(), filterRarity="all", filterRegion="all", filterElement="all";
@@ -878,7 +878,7 @@ const BASE_W=w, H=Math.floor(h*0.85), M={top:24,right:16,bottom:80,left:80}, iH=
       const xS=i=>(i/(versionOrder.length-1))*iW, yS=v=>iH-(v/100)*iH;
       [0,25,50,75,100].forEach(v=>{ const l=document.createElementNS("http://www.w3.org/2000/svg","line"); l.setAttribute("x1","0"); l.setAttribute("x2",iW); l.setAttribute("y1",yS(v)); l.setAttribute("y2",yS(v)); l.setAttribute("stroke","rgba(255,255,214,0.1)"); l.setAttribute("stroke-width","1"); g.appendChild(l); const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x","-6"); t.setAttribute("y",yS(v)+4); t.setAttribute("text-anchor","end"); t.style.cssText=axisTextStyle; t.textContent=v+"%"; g.appendChild(t); });
       versionOrder.forEach((id,i)=>{ if(i%8!==0) return; const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x",xS(i)); t.setAttribute("y",iH+24); t.setAttribute("text-anchor","middle"); t.style.cssText=axisTextStyle; t.textContent=versionLabels[i].replace(/\(Phase [IVX]+\)/,"").trim(); g.appendChild(t); });
-      const yL=document.createElementNS("http://www.w3.org/2000/svg","text"); yL.setAttribute("transform",`translate(--60,${iH/2}) rotate(-90)`); yL.setAttribute("text-anchor","middle"); yL.style.cssText=axisLabelStyle; yL.textContent="Use Rate %"; g.appendChild(yL);
+      const yL=document.createElementNS("http://www.w3.org/2000/svg","text"); yL.setAttribute("transform",`translate(-60,${iH/2}) rotate(-90)`); yL.setAttribute("text-anchor","middle"); yL.style.cssText=axisLabelStyle; yL.textContent="Use Rate %"; g.appendChild(yL);
       const xL=document.createElementNS("http://www.w3.org/2000/svg","text"); xL.setAttribute("x",iW/2); xL.setAttribute("y",iH+65); xL.setAttribute("text-anchor","middle"); xL.style.cssText=axisLabelStyle; xL.textContent="Version"; g.appendChild(xL);
       const hvLine=document.createElementNS("http://www.w3.org/2000/svg","line"); hvLine.setAttribute("y1","0"); hvLine.setAttribute("y2",iH); hvLine.setAttribute("stroke","rgba(255,255,214,0.35)"); hvLine.setAttribute("stroke-width","1"); hvLine.setAttribute("stroke-dasharray","4,4"); hvLine.style.display="none"; g.appendChild(hvLine);
       const hasPinned=pinnedChars.size>0;
@@ -937,7 +937,7 @@ const BASE_W=w, H=Math.floor(h*0.85), M={top:24,right:16,bottom:80,left:80}, iH=
   const bT = document.createElement("div"); bT.style.cssText = `font-size:11px;color:rgba(255,255,214,0.9);flex-shrink:0;`; bT.textContent = "Top 20 Characters by Pull Count"; rightPanel.appendChild(bT);
 
   const {w:_tw20, h:_th20} = window._getChartDims ? window._getChartDims() : {w:700, h:700};
-  const BW=_tw20, BH=Math.floor(_th20*0.82), BM={top:24,right:12,bottom:100,left:80};
+  const BW=_tw20, BH=Math.floor(_th20*0.75), BM={top:24,right:12,bottom:160,left:80};
   const biW = BW - BM.left - BM.right, biH = BH - BM.top - BM.bottom;
   const bWrap = document.createElement("div"); bWrap.style.cssText=`position:relative;flex-shrink:0;width:100%;`;
   const bSvg = document.createElementNS("http://www.w3.org/2000/svg","svg");
@@ -1038,8 +1038,8 @@ t.setAttribute("transform",`rotate(-40, ${x+bW2/2}, ${biH+16})`);
       const allV=Object.values(abyssAvg).flatMap(v=>Object.values(v)), yMax=Math.ceil(Math.max(...allV,10)/10)*10;
       const xSc=i=>(i/(versionOrder.length-1))*liW, ySc=v=>liH-(v/yMax)*liH;
       [0,0.5,1].forEach(pct=>{ const v=pct*yMax; const l=document.createElementNS("http://www.w3.org/2000/svg","line"); l.setAttribute("x1","0"); l.setAttribute("x2",liW); l.setAttribute("y1",ySc(v)); l.setAttribute("y2",ySc(v)); l.setAttribute("stroke","rgba(255,255,214,0.1)"); l.setAttribute("stroke-width","1"); lg.appendChild(l); const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x","-6"); t.setAttribute("y",ySc(v)+4); t.setAttribute("text-anchor","end"); t.style.cssText=axisTextStyle; t.textContent=Math.round(v)+"%"; lg.appendChild(t); });
-      versionOrder.forEach((id,i)=>{ if(i%10!==0) return; const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x",xSc(i)); t.setAttribute("y",liH+14); t.setAttribute("text-anchor","middle"); t.style.cssText=axisTextStyle; t.textContent=versionLabels[i].replace(/\(Phase [IVX]+\)/,"").trim(); lg.appendChild(t); });
-      const yL2=document.createElementNS("http://www.w3.org/2000/svg","text"); yL2.setAttribute("transform",`translate(-36,${liH/2}) rotate(-90)`); yL2.setAttribute("text-anchor","middle"); yL2.style.cssText=axisLabelStyle; yL2.textContent="Use Rate %"; lg.appendChild(yL2);
+      versionOrder.forEach((id,i)=>{ if(i%10!==0) return; const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x",xSc(i)); t.setAttribute("y",liH+24); t.setAttribute("text-anchor","middle"); t.style.cssText=axisTextStyle; t.textContent=versionLabels[i].replace(/\(Phase [IVX]+\)/,"").trim(); lg.appendChild(t); });
+      const yL2=document.createElementNS("http://www.w3.org/2000/svg","text"); yL2.setAttribute("transform",`translate(-60,${liH/2}) rotate(-90)`); yL2.setAttribute("text-anchor","middle"); yL2.style.cssText=axisLabelStyle; yL2.textContent="Use Rate %"; lg.appendChild(yL2);
       const hvL=document.createElementNS("http://www.w3.org/2000/svg","line"); hvL.setAttribute("y1","0"); hvL.setAttribute("y2",liH); hvL.setAttribute("stroke","rgba(255,255,214,0.35)"); hvL.setAttribute("stroke-width","1"); hvL.setAttribute("stroke-dasharray","4,4"); hvL.style.display="none"; lg.appendChild(hvL);
       const hasPinned=pinnedCats.size>0;
       cats.forEach(cat=>{
