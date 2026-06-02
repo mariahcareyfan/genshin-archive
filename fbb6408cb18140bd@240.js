@@ -225,7 +225,7 @@ function _regions(){return(
 ]
 )}
 
-async function _mapSection(d3,mapImage,regions,labelsImage,characters,icons,mapBackBtn,splashArts)
+async function _mapSection(d3,mapImage,regions,labelsImage,characters,icons,splashArts)
 {
   const mapW = 9309, mapH = 7370;
 
@@ -1836,7 +1836,7 @@ export default function define(runtime, observer) {
   main.variable(observer()).define(["html"], _9);
   main.variable(observer("landingScreen")).define("landingScreen", ["galaxyBg","fontUrl","mapIconSvg","analysisIconSvg"], _landingScreen);
   main.variable(observer("regions")).define("regions", _regions);
-  main.variable(observer("mapSection")).define("mapSection", ["d3","mapImage","regions","labelsImage","characters","icons","mapBackBtn","splashArts"], _mapSection);
+  main.variable(observer("mapSection")).define("mapSection", ["d3","mapImage","regions","labelsImage","characters","icons","splashArts"], _mapSection);
   main.variable(observer("analysisSection")).define("analysisSection", ["FileAttachment","characters","galaxyBg"], _analysisSection);
   main.variable(observer("disclaimerSection")).define("disclaimerSection", ["FileAttachment","galaxyBg"], _disclaimerSection);
   main.variable(observer("characters")).define("characters", ["FileAttachment"], _characters);
