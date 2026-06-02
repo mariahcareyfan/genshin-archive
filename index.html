@@ -14,15 +14,6 @@
     background: #000;
   }
 
-  /* hide ALL observable cell output by default */
-  body > div {
-    display: none !important;
-  }
-
-  .observablehq {
-    display: none !important;
-  }
-
   #app {
     width: 100vw;
     height: 100vh;
@@ -43,11 +34,23 @@
     display: block;
   }
 
-  .screen > div {
-    width: 100% !important;
-    height: 100% !important;
-    min-height: 100vh !important;
-  }
+  .screen > * {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  background: #000;
+}
+ #screen-landing {
+  background: red !important;
+}
 </style>
 <body>
 <div id="app">
@@ -99,7 +102,12 @@ window.showScreen = function(name) {
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   document.getElementById("screen-" + name).classList.add("active");
 };
-
+setTimeout(() => {
+  console.log("landing div:", document.getElementById("screen-landing").children.length);
+  console.log("map div:", document.getElementById("screen-map").children.length);
+  console.log("analysis div:", document.getElementById("screen-analysis").children.length);
+  console.log("disclaimer div:", document.getElementById("screen-disclaimer").children.length);
+}, 5000);
 </script>
 </body>
 </html>
