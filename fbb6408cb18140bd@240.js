@@ -764,7 +764,7 @@ async function _analysisSection(FileAttachment,characters,galaxyBg)
     controlsArea.appendChild(charSearch);
 
     const {w, h} = window._getChartDims ? window._getChartDims() : {w:560, h:400};
-const W=w, H=Math.floor(h*0.85), M={top:16,right:170,bottom:46,left:56};
+const W=w, H=Math.floor(h*0.85), M={top:24,right:190,bottom:80,left:80};
     const iW=W-M.left-M.right, iH=H-M.top-M.bottom;
     const wrap = document.createElement("div"); wrap.style.cssText=`flex:1;position:relative;`; rightPanel.appendChild(wrap);
     const svgEl = document.createElementNS("http://www.w3.org/2000/svg","svg");
@@ -776,10 +776,10 @@ const W=w, H=Math.floor(h*0.85), M={top:16,right:170,bottom:46,left:56};
       const lh=document.createElementNS("http://www.w3.org/2000/svg","line"); lh.setAttribute("x1","0"); lh.setAttribute("x2",iW); lh.setAttribute("y1",yScale(v)); lh.setAttribute("y2",yScale(v)); lh.setAttribute("stroke","rgba(255,255,214,0.1)"); lh.setAttribute("stroke-width","1"); g.appendChild(lh);
       const lv=document.createElementNS("http://www.w3.org/2000/svg","line"); lv.setAttribute("x1",xScale(v)); lv.setAttribute("x2",xScale(v)); lv.setAttribute("y1","0"); lv.setAttribute("y2",iH); lv.setAttribute("stroke","rgba(255,255,214,0.1)"); lv.setAttribute("stroke-width","1"); g.appendChild(lv);
       const ty=document.createElementNS("http://www.w3.org/2000/svg","text"); ty.setAttribute("x","-6"); ty.setAttribute("y",yScale(v)+4); ty.setAttribute("text-anchor","end"); ty.style.cssText=axisTextStyle; ty.textContent=v+"%"; g.appendChild(ty);
-      const tx=document.createElementNS("http://www.w3.org/2000/svg","text"); tx.setAttribute("x",xScale(v)); tx.setAttribute("y",iH+14); tx.setAttribute("text-anchor","middle"); tx.style.cssText=axisTextStyle; tx.textContent=v+"%"; g.appendChild(tx);
+      const tx=document.createElementNS("http://www.w3.org/2000/svg","text"); tx.setAttribute("x",xScale(v)); tx.setAttribute("y",iH+24); tx.setAttribute("text-anchor","middle"); tx.style.cssText=axisTextStyle; tx.textContent=v+"%"; g.appendChild(tx);
     });
-    const yLab=document.createElementNS("http://www.w3.org/2000/svg","text"); yLab.setAttribute("transform",`translate(-40,${iH/2}) rotate(-90)`); yLab.setAttribute("text-anchor","middle"); yLab.style.cssText=axisLabelStyle; yLab.textContent="Abyss Use Rate %"; g.appendChild(yLab);
-    const xLab=document.createElementNS("http://www.w3.org/2000/svg","text"); xLab.setAttribute("x",iW/2); xLab.setAttribute("y",iH+36); xLab.setAttribute("text-anchor","middle"); xLab.style.cssText=axisLabelStyle; xLab.textContent="Ownership Rate %"; g.appendChild(xLab);
+    const yLab=document.createElementNS("http://www.w3.org/2000/svg","text"); yLab.setAttribute("transform",`translate(-65,${iH/2}) rotate(-90)`); yLab.setAttribute("text-anchor","middle"); yLab.style.cssText=axisLabelStyle; yLab.textContent="Abyss Use Rate %"; g.appendChild(yLab);
+    const xLab=document.createElementNS("http://www.w3.org/2000/svg","text"); xLab.setAttribute("x",iW/2); xLab.setAttribute("y",iH+65); xLab.setAttribute("text-anchor","middle"); xLab.style.cssText=axisLabelStyle; xLab.textContent="Ownership Rate %"; g.appendChild(xLab);
     const dotsGroup=document.createElementNS("http://www.w3.org/2000/svg","g"); g.appendChild(dotsGroup);
     const tooltip=makeTooltip(wrap);
 
@@ -852,7 +852,7 @@ const W=w, H=Math.floor(h*0.85), M={top:16,right:170,bottom:46,left:56};
     const clrBtn=document.createElement("div"); clrBtn.style.cssText=`padding:6px 12px;border-radius:12px;font-size:10px;cursor:pointer;border:1px solid rgba(255,100,100,0.4);color:rgba(255,100,100,0.8);text-align:center;flex-shrink:0;`; clrBtn.textContent="Clear Pinned"; clrBtn.addEventListener("click",()=>{ pinnedChars.clear(); renderLines(); }); controlsArea.appendChild(clrBtn);
 
     const {w, h} = window._getChartDims ? window._getChartDims() : {w:560, h:500};
-const BASE_W=w, H=Math.floor(h*0.85), M={top:16,right:16,bottom:46,left:52}, iH=H-M.top-M.bottom;
+const BASE_W=w, H=Math.floor(h*0.85), M={top:24,right:16,bottom:80,left:80}, iH=H-M.top-M.bottom;
     const {outerWrap,scrollWrap,scrollOuter}=makeZoomableChart(BASE_W);
     rightPanel.appendChild(outerWrap);
     const tooltip=makeTooltip(scrollWrap);
@@ -877,9 +877,9 @@ const BASE_W=w, H=Math.floor(h*0.85), M={top:16,right:16,bottom:46,left:52}, iH=
       const g=document.createElementNS("http://www.w3.org/2000/svg","g"); g.setAttribute("transform",`translate(${M.left},${M.top})`); svg.appendChild(g);
       const xS=i=>(i/(versionOrder.length-1))*iW, yS=v=>iH-(v/100)*iH;
       [0,25,50,75,100].forEach(v=>{ const l=document.createElementNS("http://www.w3.org/2000/svg","line"); l.setAttribute("x1","0"); l.setAttribute("x2",iW); l.setAttribute("y1",yS(v)); l.setAttribute("y2",yS(v)); l.setAttribute("stroke","rgba(255,255,214,0.1)"); l.setAttribute("stroke-width","1"); g.appendChild(l); const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x","-6"); t.setAttribute("y",yS(v)+4); t.setAttribute("text-anchor","end"); t.style.cssText=axisTextStyle; t.textContent=v+"%"; g.appendChild(t); });
-      versionOrder.forEach((id,i)=>{ if(i%8!==0) return; const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x",xS(i)); t.setAttribute("y",iH+14); t.setAttribute("text-anchor","middle"); t.style.cssText=axisTextStyle; t.textContent=versionLabels[i].replace(/\(Phase [IVX]+\)/,"").trim(); g.appendChild(t); });
-      const yL=document.createElementNS("http://www.w3.org/2000/svg","text"); yL.setAttribute("transform",`translate(-36,${iH/2}) rotate(-90)`); yL.setAttribute("text-anchor","middle"); yL.style.cssText=axisLabelStyle; yL.textContent="Use Rate %"; g.appendChild(yL);
-      const xL=document.createElementNS("http://www.w3.org/2000/svg","text"); xL.setAttribute("x",iW/2); xL.setAttribute("y",iH+36); xL.setAttribute("text-anchor","middle"); xL.style.cssText=axisLabelStyle; xL.textContent="Version"; g.appendChild(xL);
+      versionOrder.forEach((id,i)=>{ if(i%8!==0) return; const t=document.createElementNS("http://www.w3.org/2000/svg","text"); t.setAttribute("x",xS(i)); t.setAttribute("y",iH+24); t.setAttribute("text-anchor","middle"); t.style.cssText=axisTextStyle; t.textContent=versionLabels[i].replace(/\(Phase [IVX]+\)/,"").trim(); g.appendChild(t); });
+      const yL=document.createElementNS("http://www.w3.org/2000/svg","text"); yL.setAttribute("transform",`translate(--60,${iH/2}) rotate(-90)`); yL.setAttribute("text-anchor","middle"); yL.style.cssText=axisLabelStyle; yL.textContent="Use Rate %"; g.appendChild(yL);
+      const xL=document.createElementNS("http://www.w3.org/2000/svg","text"); xL.setAttribute("x",iW/2); xL.setAttribute("y",iH+65); xL.setAttribute("text-anchor","middle"); xL.style.cssText=axisLabelStyle; xL.textContent="Version"; g.appendChild(xL);
       const hvLine=document.createElementNS("http://www.w3.org/2000/svg","line"); hvLine.setAttribute("y1","0"); hvLine.setAttribute("y2",iH); hvLine.setAttribute("stroke","rgba(255,255,214,0.35)"); hvLine.setAttribute("stroke-width","1"); hvLine.setAttribute("stroke-dasharray","4,4"); hvLine.style.display="none"; g.appendChild(hvLine);
       const hasPinned=pinnedChars.size>0;
       getFiltered().forEach(name=>{
@@ -1023,7 +1023,7 @@ t.setAttribute("transform",`rotate(-40, ${x+bW2/2}, ${biH+16})`);
 
     const lT=document.createElement("div"); lT.style.cssText=`font-size:11px;color:rgba(255,255,214,0.9);flex-shrink:0;`; lT.textContent=`Abyss Use Rate · ${category}`; rightPanel.appendChild(lT);
     const BASE_LW=_tw3, LH=Math.floor(_th3*0.38);
-    const LM={top:16,right:16,bottom:80,left:80}, liH=LH-LM.top-LM.bottom;
+    const LM={top:16,right:16,bottom:100,left:80}, liH=LH-LM.top-LM.bottom;
     const {outerWrap:lOuter,scrollWrap:lScroll}=makeZoomableChart(BASE_LW);
     rightPanel.appendChild(lOuter);
     const lTip=makeTooltip(lScroll);
