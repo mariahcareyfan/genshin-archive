@@ -230,9 +230,10 @@ async function _mapSection(d3,mapImage,regions,labelsImage,characters,icons,spla
   const mapW = 9309, mapH = 7370;
 
   const svg = d3.create("svg")
-    .attr("viewBox", `0 0 ${mapW} ${mapH}`)
-    .attr("width", "100%")
-    .style("display", "block");
+  .attr("viewBox", `0 0 ${mapW} ${mapH}`)
+  .attr("width", "100%")
+  .attr("height", "100%")
+  .style("display", "block");
 
   const g = svg.append("g");
 
@@ -287,11 +288,16 @@ async function _mapSection(d3,mapImage,regions,labelsImage,characters,icons,spla
   window.openCharacterCard(d);
 });
 
-  const zoom = d3.zoom()
-    .scaleExtent([0.5, 8])
-    .on("zoom", e => g.attr("transform", e.transform));
+const zoom = d3.zoom()
+.scaleExtent([Math.min(window.innerWidth / mapW, window.innerHeight / mapH), 8])
+.on("zoom", e => g.attr("transform", e.transform));
 
   svg.call(zoom);
+
+  const initialScale = Math.min(window.innerWidth / mapW, window.innerHeight / mapH);
+svg.call(zoom.transform, d3.zoomIdentity
+  .translate((window.innerWidth - mapW * initialScale) / 2, (window.innerHeight - mapH * initialScale) / 2)
+  .scale(initialScale));
 
   function clickRegion(r, path) {
     const scale = Math.max(1, Math.min(8, 1.2 / Math.max(r.w / mapW, r.h / mapH)));
@@ -341,8 +347,8 @@ async function _mapSection(d3,mapImage,regions,labelsImage,characters,icons,spla
 
   // ── WRAPPER ──
   const wrapper = document.createElement("div");
-  wrapper.id = "map-section";
-  wrapper.style.cssText = "position:relative; overflow:hidden;";
+wrapper.id = "map-section";
+wrapper.style.cssText = "position:relative; overflow:hidden; width:100vw; height:100vh;";
   wrapper.appendChild(svg.node());
 
   const mapBackBtn = document.createElement("div");
@@ -760,7 +766,8 @@ async function _analysisSection(FileAttachment,characters,galaxyBg)
     const charSearch = buildCharSearch(name => { highlighted=highlighted===name?null:name; renderDots(); pinnedPanel.update(highlighted?new Set([highlighted]):new Set()); });
     controlsArea.appendChild(charSearch);
 
-    const W=560, H=320, M={top:16,right:170,bottom:46,left:56};
+    const {w, h} = window._getChartDims ? window._getChartDims() : {w:560, h:400};
+const W=w, H=Math.floor(h*0.85), M={top:16,right:170,bottom:46,left:56};
     const iW=W-M.left-M.right, iH=H-M.top-M.bottom;
     const wrap = document.createElement("div"); wrap.style.cssText=`flex:1;position:relative;`; rightPanel.appendChild(wrap);
     const svgEl = document.createElementNS("http://www.w3.org/2000/svg","svg");
@@ -847,7 +854,8 @@ async function _analysisSection(FileAttachment,characters,galaxyBg)
     const cs=buildCharSearch(name=>{ if(pinnedChars.has(name)) pinnedChars.delete(name); else pinnedChars.add(name); renderLines(); }); controlsArea.appendChild(cs);
     const clrBtn=document.createElement("div"); clrBtn.style.cssText=`padding:6px 12px;border-radius:12px;font-size:10px;cursor:pointer;border:1px solid rgba(255,100,100,0.4);color:rgba(255,100,100,0.8);text-align:center;flex-shrink:0;`; clrBtn.textContent="Clear Pinned"; clrBtn.addEventListener("click",()=>{ pinnedChars.clear(); renderLines(); }); controlsArea.appendChild(clrBtn);
 
-    const BASE_W=800, H=600, M={top:16,right:16,bottom:46,left:52}, iH=H-M.top-M.bottom;
+    const {w, h} = window._getChartDims ? window._getChartDims() : {w:560, h:500};
+const BASE_W=w, H=Math.floor(h*0.85), M={top:16,right:16,bottom:46,left:52}, iH=H-M.top-M.bottom;
     const {outerWrap,scrollWrap,scrollOuter}=makeZoomableChart(BASE_W);
     rightPanel.appendChild(outerWrap);
     const tooltip=makeTooltip(scrollWrap);
@@ -995,7 +1003,8 @@ t.setAttribute("transform",`rotate(-40, ${x+bW2/2}, ${biH+16})`);
     Object.keys(abyssAvg).forEach(cat=>{ Object.keys(abyssAvg[cat]).forEach(vid=>{ const arr=abyssAvg[cat][vid]; abyssAvg[cat][vid]=arr.reduce((a,b)=>a+b,0)/arr.length; }); });
 
     const bT=document.createElement("div"); bT.style.cssText=`font-size:11px;color:rgba(255,255,214,0.9);flex-shrink:0;`; bT.textContent=`Pull Rate · ${category}`; rightPanel.appendChild(bT);
-    const BW=560,BH=220,BM={top:8,right:12,bottom:80,left:72},biW=BW-BM.left-BM.right,biH=BH-BM.top-BM.bottom;
+    const {w, h} = window._getChartDims ? window._getChartDims() : {w:560, h:220};
+const BW=w, BH=Math.floor(h*0.25), BM={top:8,right:12,bottom:80,left:100};
     const bWrap=document.createElement("div"); bWrap.style.cssText=`position:relative;flex-shrink:0;`;
     const bSvg=document.createElementNS("http://www.w3.org/2000/svg","svg"); bSvg.setAttribute("viewBox",`0 0 ${BW} ${BH}`); bSvg.style.cssText=`width:100%;height:${BH}px;`;
     bWrap.appendChild(bSvg); rightPanel.appendChild(bWrap);
@@ -1015,7 +1024,7 @@ t.setAttribute("transform",`rotate(-40, ${x+bW2/2}, ${biH+16})`);
     const bLeg=document.createElement("div"); bLeg.style.cssText=`display:flex;flex-wrap:wrap;gap:8px;flex-shrink:0;padding:2px 0 4px;`; cats.forEach(cat=>{ const item=document.createElement("div"); item.style.cssText=`display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,214,0.8);`; item.innerHTML=`<div style="width:8px;height:8px;border-radius:2px;background:${catColors[cat]};"></div>${cat}`; bLeg.appendChild(item); }); rightPanel.appendChild(bLeg);
 
     const lT=document.createElement("div"); lT.style.cssText=`font-size:11px;color:rgba(255,255,214,0.9);flex-shrink:0;`; lT.textContent=`Abyss Use Rate · ${category}`; rightPanel.appendChild(lT);
-    const BASE_LW=560,LH=220,LM={top:8,right:16,bottom:44,left:52},liH=LH-LM.top-LM.bottom;
+    const BASE_LW=w, LH=Math.floor(h*0.35);
     const {outerWrap:lOuter,scrollWrap:lScroll}=makeZoomableChart(BASE_LW);
     rightPanel.appendChild(lOuter);
     const lTip=makeTooltip(lScroll);
@@ -1073,8 +1082,17 @@ t.setAttribute("transform",`rotate(-40, ${x+bW2/2}, ${biH+16})`);
     if(i===0) drawTab1(); else if(i===1) drawTab2(); else drawTab3("Top 20 Characters");
   }
 
-  drawTab1();
-  return container;
+  // get available dimensions after container is in DOM
+function getChartDims() {
+  const bodyEl = container.querySelector('[style*="flex:1"]') || body;
+  const availH = window.innerHeight - 80; // subtract topbar height
+  const availW = window.innerWidth - 240 - 80; // subtract left panel and padding
+  return { w: Math.max(400, availW), h: Math.max(300, availH) };
+}
+window._getChartDims = getChartDims;
+
+drawTab1();
+return container;
 }
 
 
