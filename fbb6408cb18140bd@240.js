@@ -294,10 +294,11 @@ const zoom = d3.zoom()
 
   svg.call(zoom);
 
-  const initialScale = Math.min(window.innerWidth / mapW, window.innerHeight / mapH);
-svg.call(zoom.transform, d3.zoomIdentity
-  .translate((window.innerWidth - mapW * initialScale) / 2, (window.innerHeight - mapH * initialScale) / 2)
-  .scale(initialScale));
+  // fit map to screen on load
+  const fitScale = Math.min(window.innerWidth / mapW, window.innerHeight / mapH) * 1.0;
+  const fitX = (window.innerWidth - mapW * fitScale) / 2;
+  const fitY = (window.innerHeight - mapH * fitScale) / 2;
+  svg.call(zoom.transform, d3.zoomIdentity.translate(fitX, fitY).scale(fitScale));
 
   function clickRegion(r, path) {
     const scale = Math.max(1, Math.min(8, 1.2 / Math.max(r.w / mapW, r.h / mapH)));
@@ -341,7 +342,10 @@ svg.call(zoom.transform, d3.zoomIdentity
       g.selectAll(".char-icon").transition().duration(750).attr("opacity", 0);
       labels.transition().duration(750).attr("opacity", 1);
       Object.values(regionPaths).forEach(p => p.transition().duration(750).attr("opacity", 1));
-      svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
+      const _fitScale = Math.min(window.innerWidth / mapW, window.innerHeight / mapH) * 1.0;
+      const _fitX = (window.innerWidth - mapW * _fitScale) / 2;
+      const _fitY = (window.innerHeight - mapH * _fitScale) / 2;
+      svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity.translate(_fitX, _fitY).scale(_fitScale));
     }
   });
 
@@ -1003,8 +1007,9 @@ t.setAttribute("transform",`rotate(-40, ${x+bW2/2}, ${biH+16})`);
     Object.keys(abyssAvg).forEach(cat=>{ Object.keys(abyssAvg[cat]).forEach(vid=>{ const arr=abyssAvg[cat][vid]; abyssAvg[cat][vid]=arr.reduce((a,b)=>a+b,0)/arr.length; }); });
 
     const bT=document.createElement("div"); bT.style.cssText=`font-size:11px;color:rgba(255,255,214,0.9);flex-shrink:0;`; bT.textContent=`Pull Rate · ${category}`; rightPanel.appendChild(bT);
-    const {w, h} = window._getChartDims ? window._getChartDims() : {w:560, h:220};
-const BW=w, BH=Math.floor(h*0.25), BM={top:8,right:12,bottom:80,left:100};
+    const {w:_tw, h:_th} = window._getChartDims ? window._getChartDims() : {w:560, h:500};
+    const BW=_tw, BH=Math.floor(_th*0.28), BM={top:8,right:12,bottom:80,left:100};
+    const biW=BW-BM.left-BM.right, biH=BH-BM.top-BM.bottom;
     const bWrap=document.createElement("div"); bWrap.style.cssText=`position:relative;flex-shrink:0;`;
     const bSvg=document.createElementNS("http://www.w3.org/2000/svg","svg"); bSvg.setAttribute("viewBox",`0 0 ${BW} ${BH}`); bSvg.style.cssText=`width:100%;height:${BH}px;`;
     bWrap.appendChild(bSvg); rightPanel.appendChild(bWrap);
@@ -1024,7 +1029,7 @@ const BW=w, BH=Math.floor(h*0.25), BM={top:8,right:12,bottom:80,left:100};
     const bLeg=document.createElement("div"); bLeg.style.cssText=`display:flex;flex-wrap:wrap;gap:8px;flex-shrink:0;padding:2px 0 4px;`; cats.forEach(cat=>{ const item=document.createElement("div"); item.style.cssText=`display:flex;align-items:center;gap:4px;font-size:9px;color:rgba(255,255,214,0.8);`; item.innerHTML=`<div style="width:8px;height:8px;border-radius:2px;background:${catColors[cat]};"></div>${cat}`; bLeg.appendChild(item); }); rightPanel.appendChild(bLeg);
 
     const lT=document.createElement("div"); lT.style.cssText=`font-size:11px;color:rgba(255,255,214,0.9);flex-shrink:0;`; lT.textContent=`Abyss Use Rate · ${category}`; rightPanel.appendChild(lT);
-    const BASE_LW=w, LH=Math.floor(h*0.35);
+    const BASE_LW=_tw, LH=Math.floor(_th*0.38), LM={top:8,right:16,bottom:44,left:52}, liH=LH-LM.top-LM.bottom;
     const {outerWrap:lOuter,scrollWrap:lScroll}=makeZoomableChart(BASE_LW);
     rightPanel.appendChild(lOuter);
     const lTip=makeTooltip(lScroll);
